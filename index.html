@@ -86,24 +86,29 @@
         }
 
         /* --- Custom Scrollbars --- */
-        * { 
-            box-sizing: border-box; 
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent) #1a1a1c;
-        }
+* { 
+    box-sizing: border-box; 
+}
 
-        div::-webkit-scrollbar, textarea::-webkit-scrollbar, pre::-webkit-scrollbar {
+#chat-window {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) #1a1a1c;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+        textarea::-webkit-scrollbar, pre::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
-        div::-webkit-scrollbar-track, textarea::-webkit-scrollbar-track, pre::-webkit-scrollbar-track {
+        textarea::-webkit-scrollbar-track, pre::-webkit-scrollbar-track {
             background: #1a1a1c;
         }
-        div::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb, pre::-webkit-scrollbar-thumb {
+        textarea::-webkit-scrollbar-thumb, pre::-webkit-scrollbar-thumb {
             background: #3f3f46;
             border-radius: 10px;
         }
-        div::-webkit-scrollbar-thumb:hover, textarea::-webkit-scrollbar-thumb:hover, pre::-webkit-scrollbar-thumb:hover {
+        textarea::-webkit-scrollbar-thumb:hover, pre::-webkit-scrollbar-thumb:hover {
             background: var(--accent);
         }
 
@@ -273,6 +278,11 @@
             z-index: 1000;
             flex-shrink: 0;
         }
+
+        #chat-window::-webkit-scrollbar { width: 6px; }
+        #chat-window::-webkit-scrollbar-track { background: #1a1a1c; }
+        #chat-window::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        #chat-window::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
         .toggle-btn {
             background: transparent;
