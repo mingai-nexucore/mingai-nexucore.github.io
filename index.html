@@ -396,7 +396,7 @@ textarea {
     resize: none; outline: none; font-size: 16px; 
     padding: 8px 0; 
     height: 40px;
-    max-height: 40px;
+    max-height: 200px;
     overflow-y: auto;
 }
 
@@ -746,6 +746,8 @@ function __1O1_1(_cn){ _cn.querySelectorAll('pre').forEach(function(_pr){ if(_pr
 function __1O__1O0(_role,_txt){ var _dp=document.getElementById('chat-display'); var _wr=document.createElement('div'); _wr.className='role-wrapper'; var _hd=document.createElement('div'); _hd.className='role-header'+(_role==='user'?' user-header':''); _hd.innerText=_role==='user'?'You':'MingAI'; var _bb=document.createElement('div'); _bb.className='bubble'+(_role==='user'?' user-bubble':''); _bb.innerHTML=_txt?marked.parse(_txt):''; _wr.appendChild(_hd); _wr.appendChild(_bb); _dp.appendChild(_wr); var _cw=document.getElementById('chat-window'); _cw.scrollTop=_cw.scrollHeight; return{bubble:_bb,wrapper:_wr}; }
 
 document.getElementById('user-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();askMing();}});
+
+document.getElementById('user-input').addEventListener('input', function() { this.style.height = '40px'; this.style.height = this.scrollHeight + 'px'; });
 
 // Wire up global functions needed by inline HTML handlers
 window.openSettings=_001_0O0O;
