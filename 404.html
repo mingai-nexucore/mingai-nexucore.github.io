@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 – MingAI</title>
+    <link rel="icon" type="image/x-icon" href="https://mingai-nexucore.github.io/assets/logo.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0d0e;
+            --card: #1a1a1c;
+            --accent: #818cf8;
+            --accent-dim: rgba(129, 140, 248, 0.12);
+            --text: #ececec;
+            --text-muted: #71717a;
+            --border: #1f1f22;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Subtle grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(129,140,248,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(129,140,248,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glowing radial blob */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, rgba(129,140,248,0.07) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glitchy 404 number */
+        .error-code {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(96px, 20vw, 180px);
+            font-weight: 700;
+            line-height: 1;
+            color: var(--text);
+            position: relative;
+            letter-spacing: -4px;
+            user-select: none;
+        }
+
+        .error-code::before,
+        .error-code::after {
+            content: '404';
+            position: absolute;
+            inset: 0;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .error-code::before {
+            color: rgba(129, 140, 248, 0.5);
+            animation: glitch1 3.5s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+        }
+
+        .error-code::after {
+            color: rgba(248, 150, 129, 0.35);
+            animation: glitch2 3.5s infinite;
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch1 {
+            0%, 90%, 100% { transform: translate(0, 0); opacity: 0; }
+            92% { transform: translate(-3px, -2px); opacity: 1; }
+            94% { transform: translate(3px, 0); opacity: 1; }
+            96% { transform: translate(-2px, 1px); opacity: 1; }
+            98% { transform: translate(0, 0); opacity: 0; }
+        }
+
+        @keyframes glitch2 {
+            0%, 90%, 100% { transform: translate(0, 0); opacity: 0; }
+            93% { transform: translate(3px, 2px); opacity: 1; }
+            95% { transform: translate(-3px, 0); opacity: 1; }
+            97% { transform: translate(2px, -1px); opacity: 1; }
+            99% { transform: translate(0, 0); opacity: 0; }
+        }
+
+        .divider {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, var(--border), transparent);
+            margin: 20px 0;
+        }
+
+        .brand {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .title {
+            font-size: clamp(18px, 4vw, 26px);
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            max-width: 380px;
+            line-height: 1.7;
+            margin-bottom: 36px;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--text);
+            background: var(--accent-dim);
+        }
+
+        /* Terminal-style status chip */
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            background: rgba(255,255,255,0.02);
+            opacity: 0;
+            animation: fadeUp 0.7s 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #f87171;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        footer {
+            position: fixed;
+            bottom: 20px;
+            font-size: 11px;
+            color: #3f3f46;
+            letter-spacing: 0.3px;
+            z-index: 1;
+        }
+
+        @media (max-width: 480px) {
+            .actions { flex-direction: column; align-items: center; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="brand">MingAI · NexuCore</div>
+    <div class="error-code">404</div>
+    <div class="divider"></div>
+    <div class="title">Page not found</div>
+    <div class="subtitle">The page you're looking for doesn't exist or has been moved. Let's get you back on track.</div>
+    <div class="actions">
+        <a href="/" class="btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Go home
+        </a>
+    </div>
+    <div style="height: 28px;"></div>
+    <div class="status-chip">
+        <div class="status-dot"></div>
+        error_code: 404 · route_not_matched
+    </div>
+</div>
+
+<footer>MingAI | Made by NexuCore</footer>
+
+</body>
+</html>
