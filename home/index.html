@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MingAI – Home</title>
+    <link rel="icon" type="image/x-icon" href="https://mingai-nexucore.github.io/assets/logo.ico">
+    <meta name="description" content="MingAI is a powerful modern AI assistant built by NexuCore. Chat, code, brainstorm, and boost your productivity with intelligent AI conversations.">
+    <meta name="keywords" content="MingAI, AI assistant, NexuCore, chat AI, productivity AI, coding assistant">
+    <meta name="author" content="NexuCore">
+    <meta property="og:title" content="MingAI – Modern AI Assistant">
+    <meta property="og:description" content="A fast, intelligent AI assistant built for productivity, coding, and creative thinking.">
+    <meta property="og:image" content="https://mingai-nexucore.github.io/assets/thumb.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MingAI – Modern AI Assistant">
+    <meta name="twitter:description" content="Chat, code, and create with MingAI by NexuCore.">
+    <meta name="twitter:image" content="https://mingai-nexucore.github.io/assets/thumb.png">
+    <meta name="description" content="MingAI is a powerful modern AI assistant built by NexuCore. Chat, code, brainstorm, and boost your productivity.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0d0e;
+            --card: #1a1a1c;
+            --accent: #818cf8;
+            --accent-dim: rgba(129,140,248,0.15);
+            --accent-glow: rgba(129,140,248,0.3);
+            --text: #ececec;
+            --text-muted: #71717a;
+            --border: #1f1f22;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* ---- NOISE TEXTURE OVERLAY ---- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.5;
+        }
+
+        /* ---- AMBIENT GLOW ---- */
+        .ambient {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(120px);
+        }
+        .ambient-1 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+            top: -200px; left: -200px;
+        }
+        .ambient-2 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(129,140,248,0.08) 0%, transparent 70%);
+            bottom: 0; right: -100px;
+        }
+
+        /* ---- NAV ---- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 0 40px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(13,13,14,0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(31,31,34,0.6);
+        }
+
+        .nav-logo {
+            font-family: sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.3px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 8px 14px;
+            border-radius: 8px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--card); }
+
+        .nav-cta {
+            background: var(--accent) !important;
+            color: #fff !important;
+            font-weight: 500 !important;
+            padding: 9px 20px !important;
+            border-radius: 10px !important;
+            transition: opacity 0.2s, transform 0.2s !important;
+        }
+        .nav-cta:hover { opacity: 0.9 !important; transform: scale(1.03) !important; background: var(--accent) !important; }
+
+        /* ---- HERO ---- */
+        #hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            overflow: hidden;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(129,140,248,0.25);
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 28px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.2s forwards;
+        }
+        .hero-badge-dot {
+            width: 6px; height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        .hero-headline {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 800;
+            line-height: 1.0;
+            letter-spacing: -2px;
+            max-width: 900px;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.9s ease 0.35s forwards;
+        }
+
+        .headline-gradient {
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 60%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 520px;
+            line-height: 1.75;
+            margin-bottom: 44px;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeUp 0.9s ease 0.5s forwards;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeUp 0.9s ease 0.65s forwards;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 0 40px rgba(129,140,248,0.25);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 60px rgba(129,140,248,0.4);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            color: var(--text-muted);
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 1rem;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover { color: var(--text); border-color: #3f3f46; background: var(--card); }
+
+        /* Hero mockup */
+        .hero-mockup {
+            margin-top: 72px;
+            position: relative;
+            width: 100%;
+            max-width: 860px;
+            opacity: 0;
+            animation: fadeUp 1s ease 0.85s forwards;
+        }
+
+        .mockup-glow {
+            position: absolute;
+            inset: -40px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(129,140,248,0.2) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .mockup-window {
+            background: #080809;
+            border: 1px solid #27272a;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 40px 120px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        .mockup-titlebar {
+            background: #0d0d0e;
+            border-bottom: 1px solid #1a1a1c;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .mockup-dot:nth-child(1) { background: #ff5f57; }
+        .mockup-dot:nth-child(2) { background: #febc2e; }
+        .mockup-dot:nth-child(3) { background: #28c840; }
+
+        .mockup-body {
+            padding: 24px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            min-height: 340px;
+        }
+
+        .mock-role-wrapper { width: 100%; text-align: left; }
+
+        .mock-role-header {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 7px;
+            color: var(--accent);
+            text-align: left;
+        }
+        .mock-role-header.user-header { color: #52525b; }
+
+        .mock-user-bubble {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 500;
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        .mock-ai-bubble {
+            font-size: 0.9rem;
+            color: #d1d1d1;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .mock-code {
+            background: #000;
+            border: 1px solid #27272a;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 0.8rem;
+            font-family: 'Courier New', monospace;
+            color: #e4e4e7;
+            margin-top: 10px;
+            text-align: left;
+            white-space: pre;
+        }
+        /* match github-dark hljs theme used in real app */
+        .mock-code .kw  { color: #ff7b72; }   /* red — import, def, for, try, except, return */
+        .mock-code .fn  { color: #d2a8ff; }   /* purple — function names */
+        .mock-code .num { color: #79c0ff; }   /* blue — numbers */
+        .mock-code .cm  { color: #8b949e; }   /* grey — comments */
+
+        .mock-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 2px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---- MARQUEE STRIP ---- */
+        .marquee-strip {
+            position: relative;
+            z-index: 1;
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            background: rgba(13,13,14,0.5);
+        }
+        .marquee-track {
+            display: flex;
+            gap: 48px;
+            animation: marquee 30s linear infinite;
+            white-space: nowrap;
+            width: max-content;
+        }
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+        }
+        .marquee-item span { color: var(--accent); font-size: 18px; }
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* ---- FEATURES ---- */
+        #features {
+            position: relative;
+            z-index: 1;
+            padding: 120px 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            max-width: 540px;
+            margin-bottom: 64px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .feature-card {
+            background: var(--card);
+            padding: 36px 32px;
+            transition: background 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .feature-card:hover { background: #1f1f22; }
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-icon {
+            width: 44px; height: 44px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(129,140,248,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .feature-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .feature-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* ---- HOW IT WORKS ---- */
+        #how {
+            position: relative;
+            z-index: 1;
+            padding: 80px 40px 120px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .steps-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 64px;
+            position: relative;
+        }
+
+        .steps-row::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: calc(16.7% + 16px);
+            right: calc(16.7% + 16px);
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent-glow), transparent, var(--accent-glow));
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .step-num {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text);
+        }
+
+        .step-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* ---- TESTIMONIALS ---- */
+        #testimonials {
+            position: relative;
+            z-index: 1;
+            padding: 80px 40px 120px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 64px;
+        }
+
+        .testimonial-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .testimonial-card:hover { border-color: rgba(129,140,248,0.3); transform: translateY(-3px); }
+
+        .testimonial-stars {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 16px;
+        }
+        .star { color: #fbbf24; font-size: 14px; }
+
+        .testimonial-text {
+            font-size: 0.9rem;
+            color: #a1a1aa;
+            line-height: 1.75;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .author-avatar {
+            width: 34px; height: 34px;
+            border-radius: 10px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(129,140,248,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .author-info .name { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+        .author-info .role { font-size: 0.78rem; color: var(--text-muted); }
+
+        /* ---- CTA SECTION ---- */
+        #cta {
+            position: relative;
+            z-index: 1;
+            padding: 80px 40px 120px;
+        }
+
+        .cta-card {
+            max-width: 820px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #111114 0%, #16161a 100%);
+            border: 1px solid rgba(129,140,248,0.2);
+            border-radius: 28px;
+            padding: 72px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: -100px; left: 50%;
+            transform: translateX(-50%);
+            width: 400px; height: 300px;
+            background: radial-gradient(ellipse, rgba(129,140,248,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-headline {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+
+        .cta-sub {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        /* ---- FOOTER ---- */
+        footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 36px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            font-family: sans-serif;
+            font-size: 1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-text {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+        .footer-links a {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--text); }
+
+        /* ---- SCROLL REVEAL ---- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* ---- MOBILE ---- */
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .nav-links { display: none; }
+            .features-grid, .steps-row, .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            .steps-row::before { display: none; }
+            #features, #how, #testimonials { padding: 60px 20px; }
+            .cta-card { padding: 48px 24px; }
+            footer { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
+
+<!-- NAV -->
+<nav>
+    <a href="#" class="nav-logo">MingAI</a>
+    <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How it Works</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="https://mingai-nexucore.github.io/" class="nav-cta">Start Chatting →</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+    <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        MingAI 2.1 now available
+    </div>
+
+    <h1 class="hero-headline">
+        <span class="headline-gradient">Think Faster.</span><br>
+        Build Smarter.
+    </h1>
+
+    <p class="hero-sub">
+        MingAI is your intelligent AI companion for coding, writing, brainstorming, and everything in between, powered by NexuCore.
+    </p>
+
+    <div class="hero-actions">
+        <a href="https://mingai-nexucore.github.io/" class="btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+            Start for Free
+        </a>
+        <a href="#features" class="btn-secondary">
+            Explore Features
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+        </a>
+    </div>
+
+    <!-- Mockup -->
+    <div class="hero-mockup">
+        <div class="mockup-glow"></div>
+        <div class="mockup-window">
+            <div class="mockup-titlebar">
+                <div class="mockup-dot"></div>
+                <div class="mockup-dot"></div>
+                <div class="mockup-dot"></div>
+                <span style="font-size: 12px; color: #52525b; margin-left: 10px; font-family: sans-serif; font-weight: 600;">MingAI</span>
+            </div>
+            <div class="mockup-body">
+                <!-- YOU label + message, exactly like real app -->
+                <div class="mock-role-wrapper">
+                    <div class="mock-role-header user-header">You</div>
+                    <div class="mock-user-bubble">Write a Python function that fetches data from a REST API with error handling and retry logic.</div>
+                </div>
+                <!-- MINGAI label + response, exactly like real app -->
+                <div class="mock-role-wrapper">
+                    <div class="mock-role-header">MingAI</div>
+                    <div class="mock-ai-bubble">
+                        Sure! Here's a robust implementation using <code style="color:var(--accent); font-size:0.85em;">requests</code> with exponential backoff:
+                        <div class="mock-code"><span class="kw">import</span> requests, time
+
+<span class="kw">def</span> <span class="fn">fetch_with_retry</span>(url, retries=<span class="num">3</span>):
+    <span class="kw">for</span> attempt <span class="kw">in</span> <span class="fn">range</span>(retries):
+        <span class="kw">try</span>:
+            res = requests.<span class="fn">get</span>(url, timeout=<span class="num">5</span>)
+            res.<span class="fn">raise_for_status</span>()
+            <span class="kw">return</span> res.<span class="fn">json</span>()
+        <span class="kw">except</span> Exception <span class="kw">as</span> e:
+            time.<span class="fn">sleep</span>(<span class="num">2</span> ** attempt)
+    <span class="kw">return</span> <span class="kw">None</span></div>
+                        <span class="mock-cursor"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MARQUEE STRIP -->
+<div class="marquee-strip">
+    <div class="marquee-track">
+        <div class="marquee-item"><span>⚡</span> Lightning Fast Responses</div>
+        <div class="marquee-item"><span>🧠</span> Advanced Reasoning</div>
+        <div class="marquee-item"><span>💻</span> Code Generation</div>
+        <div class="marquee-item"><span>✍️</span> Creative Writing</div>
+        <div class="marquee-item"><span>🔍</span> Research Assistant</div>
+        <div class="marquee-item"><span>📊</span> Data Analysis</div>
+        <div class="marquee-item"><span>🌐</span> Multi-language Support</div>
+        <div class="marquee-item"><span>🔒</span> Secure & Private</div>
+        <!-- duplicate for seamless loop -->
+        <div class="marquee-item"><span>⚡</span> Lightning Fast Responses</div>
+        <div class="marquee-item"><span>🧠</span> Advanced Reasoning</div>
+        <div class="marquee-item"><span>💻</span> Code Generation</div>
+        <div class="marquee-item"><span>✍️</span> Creative Writing</div>
+        <div class="marquee-item"><span>🔍</span> Research Assistant</div>
+        <div class="marquee-item"><span>📊</span> Data Analysis</div>
+        <div class="marquee-item"><span>🌐</span> Multi-language Support</div>
+        <div class="marquee-item"><span>🔒</span> Secure & Private</div>
+    </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+    <div class="reveal">
+        <div class="section-label">What you get</div>
+        <h2 class="section-title">Everything you need to move faster</h2>
+    </div>
+    <div class="features-grid reveal">
+        <div class="feature-card">
+            <div class="feature-icon">💻</div>
+            <div class="feature-title">Code Generation</div>
+            <div class="feature-desc">Write, debug, and refactor code in any language. MingAI understands context and writes production-ready snippets instantly.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">✍️</div>
+            <div class="feature-title">Smart Writing</div>
+            <div class="feature-desc">Draft emails, reports, essays, and creative pieces with an AI that matches your tone and intent perfectly.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💡</div>
+            <div class="feature-title">Brainstorming</div>
+            <div class="feature-desc">Generate ideas, explore angles, and work through problems with an always-ready thinking partner at your side.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🗂️</div>
+            <div class="feature-title">Chat History</div>
+            <div class="feature-desc">Every conversation is saved and accessible from your sidebar. Resume where you left off, anytime.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">⚙️</div>
+            <div class="feature-title">Custom Behavior</div>
+            <div class="feature-desc">Set a system prompt to define how MingAI responds, tailor it as a specialized assistant for your exact workflow.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <div class="feature-title">Rich Formatting</div>
+            <div class="feature-desc">Full markdown support with syntax-highlighted code blocks, tables, and structured output that's easy to read and copy.</div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+    <div class="reveal">
+        <div class="section-label">The process</div>
+        <h2 class="section-title">Up and running in seconds</h2>
+    </div>
+    <div class="steps-row reveal">
+        <div class="step">
+            <div class="step-num">01</div>
+            <div class="step-title">Open MingAI</div>
+            <div class="step-desc">No signup, no downloads. Just open the app in your browser and you're immediately ready to start a conversation.</div>
+        </div>
+        <div class="step">
+            <div class="step-num">02</div>
+            <div class="step-title">Ask Anything</div>
+            <div class="step-desc">Type your question, task, or idea. MingAI handles everything from quick answers to complex multi-step projects.</div>
+        </div>
+        <div class="step">
+            <div class="step-num">03</div>
+            <div class="step-title">Get Results</div>
+            <div class="step-desc">Receive clear, formatted responses in real time. Copy code, refine your output, or dive deeper, it's that simple.</div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+    <div class="reveal">
+        <div class="section-label">People love it</div>
+        <h2 class="section-title">Trusted by builders everywhere</h2>
+    </div>
+    <div class="testimonials-grid reveal">
+        <div class="testimonial-card">
+            <div class="testimonial-stars">
+                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+            <p class="testimonial-text">"MingAI cut my boilerplate time in half. I just describe what I need and get clean, ready-to-use code. It's become my first stop for every project."</p>
+            <div class="testimonial-author">
+                <div class="author-avatar">AK</div>
+                <div class="author-info">
+                    <div class="name">Alex K.</div>
+                    <div class="role">Full-Stack Developer</div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <div class="testimonial-stars">
+                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+            <p class="testimonial-text">"I use MingAI for drafting client proposals and research briefs. The writing quality is genuinely impressive, it actually sounds like me."</p>
+            <div class="testimonial-author">
+                <div class="author-avatar">SR</div>
+                <div class="author-info">
+                    <div class="name">Sofia R.</div>
+                    <div class="role">Marketing Consultant</div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <div class="testimonial-stars">
+                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+            <p class="testimonial-text">"The chat history and custom system prompt features are game changers. I have a specialized MingAI assistant set up for each of my projects."</p>
+            <div class="testimonial-author">
+                <div class="author-avatar">JP</div>
+                <div class="author-info">
+                    <div class="name">James P.</div>
+                    <div class="role">Product Manager</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+    <div class="cta-card reveal">
+        <h2 class="cta-headline">Ready to work smarter?</h2>
+        <p class="cta-sub">Join thousands of creators, coders, and thinkers already using MingAI to get more done, every single day.</p>
+        <a href="https://mingai-nexucore.github.io/" class="btn-primary" style="display:inline-flex; font-size:1.05rem; padding:16px 36px;">
+            Launch MingAI, It's Free
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+        </a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-logo">MingAI</div>
+    <p class="footer-text">© 2025 NexuCore. All rights reserved.</p>
+    <ul class="footer-links">
+        <li><a href="mailto:ming.nexucore@gmail.com">Contact (ming.nexucore@gmail.com)</a></li>
+    </ul>
+</footer>
+
+<script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => entry.target.classList.add('visible'), i * 80);
+            }
+        });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
