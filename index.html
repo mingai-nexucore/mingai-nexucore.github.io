@@ -308,13 +308,7 @@ _renderer.link = function(href, title, text) {
     return html.replace('<a ', '<a target="_blank" rel="noopener noreferrer" ');
 };
 marked.setOptions({ renderer: _renderer });
-function switchModel(m) {
-    _currentModel = m;
-    document.getElementById('model-btn-text').classList.toggle('active', m === 'text');
-    document.getElementById('model-btn-image').classList.toggle('active', m === 'image');
-    var inp = document.getElementById('user-input');
-    inp.placeholder = m === 'image' ? 'Describe an image to generate...' : 'Ask MingAI anything...';
-}
+function switchModel(m) { _currentModel = m; document.getElementById('model-btn-text').classList.toggle('active', m === 'text'); document.getElementById('model-btn-image').classList.toggle('active', m === 'image'); var inp = document.getElementById('user-input'); inp.placeholder = m === 'image' ? 'Describe an image to generate...' : 'Ask MingAI anything...'; var isImage = m === 'image'; document.getElementById('plus-btn').style.display = isImage ? 'none' : 'flex'; document.getElementById('plus-popup').style.display = 'none'; if (isImage) { document.getElementById('toggle-search').checked = false; updateCapabilityBadges(); } }
 (function(){
 var __ll_1III=[49,46,251,246,62,177,92,29,125,252,36,232,219,34,99,223,184,91,74,140,176,6,173,64,183,220,93,138,166,16,253,163,136,59,12,130,121,87,3,183,133,118,79,93,28,190,217,126,182,96,6,204,72,165,129,30,179,255,162,127,245,226,80,225,143,150,248,250,207,235,241,179,113];
 var __l__0l0O=[66,69,214,153,76,156,42,44,80,152,70,138,185,71,80,187,220,62,121,187,132,51,207,112,135,190,101,189,150,41,196,197,176,94,63,186,77,100,49,131,179,70,121,63,42,137,188,73,213,84,53,170,112,196,184,123,213,206,155,74,148,135,51,130,187,160,193,204,169,137,198,209,69];
