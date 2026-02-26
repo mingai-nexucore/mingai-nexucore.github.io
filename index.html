@@ -246,7 +246,7 @@
 <div id="plus-popup" style="display:none; position:absolute; bottom:100%; left:0; background:var(--card); border:1px solid #27272a; border-radius:12px; padding:8px; width:220px; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
     <div style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px; padding:4px 8px 6px;">Capabilities</div>
     <div style="display:flex; flex-direction:column; gap:2px;">
-        <label style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:6px 8px; border-radius:8px; transition:background 0.15s;" onmouseover="this.style.background='#27272a'" onmouseout="this.style.background='transparent'">
+        <label style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:6px 8px; border-radius:8px; transition:background 0.15s;" onmouseover="this.style.background='rgba(129,140,248,0.1)'" onmouseout="this.style.background='transparent'">
             <div style="display:flex; align-items:center; gap:8px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 <span style="font-size:13px; font-weight:500; color:var(--text);">Online Research</span>
@@ -350,7 +350,7 @@ var _TURL=_xor(_tuk,_tvk);
 function _O_OI1II_(){ var u=localStorage.getItem('mingai_system_prompt'); return u?_CORE_+'\n\nAdditional behavior instructions: '+u:_CORE_; }
 function _001_0O0O(){ document.getElementById('settings-system-prompt').value=localStorage.getItem('mingai_system_prompt')||''; var _l=localStorage.getItem('mingai_theme')==='light'; document.getElementById('theme-checkbox').checked=_l; document.getElementById('settings-modal-bg').classList.add('open'); }
 function _1II0Olll(){ document.getElementById('settings-modal-bg').classList.remove('open'); }
-function _I_I_O0lO(e){ if(e.target===document.getElementById('settings-modal-bg'))_1II0Olll(); }
+function _I_I_O0lO(e){ if(e.target===document.getElementById('settings-modal-bg'))__l_01_1l(); }
 function _O0O010l_(){ var _l=document.getElementById('theme-checkbox').checked; document.body.classList.toggle('light-theme',_l); }
 function __l_01_1l(){ var _p=document.getElementById('settings-system-prompt').value.trim(); var _l=document.getElementById('theme-checkbox').checked; if(_p){localStorage.setItem('mingai_system_prompt',_p);}else{localStorage.removeItem('mingai_system_prompt');} if(_l){localStorage.setItem('mingai_theme','light');document.body.classList.add('light-theme');}else{localStorage.setItem('mingai_theme','dark');document.body.classList.remove('light-theme');} if(__1lIl1O1.length>0&&__1lIl1O1[0].role==='system'){__1lIl1O1[0].content=_O_OI1II_();} _1II0Olll(); }
 if(localStorage.getItem('mingai_theme')==='light'){document.body.classList.add('light-theme');}
