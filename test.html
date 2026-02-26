@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Image Generator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #0f0f0f;
+            color: #fff;
+        }
+        h1 { color: #4f8ef7; }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 16px;
+        }
+        input[type="number"] {
+            width: 70px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 16px;
+        }
+        select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 14px;
+        }
+        button {
+            padding: 10px 24px;
+            background: #4f8ef7;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:disabled { background: #333; cursor: not-allowed; }
+        #status { margin: 10px 0; color: #aaa; min-height: 24px; }
+        #results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .image-card {
+            background: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        .image-card img { width: 100%; display: block; }
+        .image-card a {
+            display: block;
+            margin: 8px;
+            text-align: center;
+            font-size: 13px;
+            color: #4f8ef7;
+            text-decoration: none;
+        }
+        .placeholder {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 13px;
+        }
+        label { color: #aaa; font-size: 14px; }
+        .note {
+            background: #1a1a2e;
+            border-left: 4px solid #4f8ef7;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        .note a { color: #4f8ef7; }
+    </style>
+</head>
+<body>
+    <h1>🖼️ AI Image Generator</h1>
+    <div class="note">
+        Powered by <strong>Hugging Face FLUX.1</strong> — free tier. Get a token at 
+        <a href="https://huggingface.co/settings/tokens" target="_blank">huggingface.co/settings/tokens</a>
+    </div>
+
+    <div class="controls">
+        <input type="text" id="hfToken" placeholder="Paste your Hugging Face token (hf_...)" />
+    </div>
+    <div class="controls">
+        <input type="text" id="prompt" placeholder="Enter a prompt..." value="Robot holding a red skateboard" />
+    </div>
+    <div class="controls">
+        <label>Model:
+            <select id="model">
+                <option value="black-forest-labs/FLUX.1-schnell">FLUX.1 Schnell (fast)</option>
+                <option value="black-forest-labs/FLUX.1-dev">FLUX.1 Dev (quality)</option>
+                <option value="stabilityai/stable-diffusion-3.5-large-turbo">SD 3.5 Turbo</option>
+                <option value="stabilityai/stable-diffusion-xl-base-1.0">SDXL</option>
+            </select>
+        </label>
+        <label>Count:
+            <input type="number" id="count" value="2" min="1" max="4" />
+        </label>
+        <button id="generateBtn" onclick="generate()">Generate</button>
+    </div>
+
+    <div id="status"></div>
+    <div id="results"></div>
+
+    <script>
+        async function generate() {
+            const token  = document.getElementById('hfToken').value.trim();
+            const prompt = document.getElementById('prompt').value.trim();
+            const model  = document.getElementById('model').value;
+            const count  = parseInt(document.getElementById('count').value);
+            const status  = document.getElementById('status');
+            const results = document.getElementById('results');
+            const btn     = document.getElementById('generateBtn');
+
+            if (!token) return status.textContent = '⚠️ Please enter your Hugging Face token.';
+            if (!prompt) return status.textContent = '⚠️ Please enter a prompt.';
+
+            btn.disabled = true;
+            results.innerHTML = '';
+
+            // Show placeholders
+            for (let i = 0; i < count; i++) {
+                const card = document.createElement('div');
+                card.className = 'image-card';
+                card.id = `card-${i}`;
+                card.innerHTML = `<div class="placeholder">⏳ Generating...</div>`;
+                results.appendChild(card);
+            }
+
+            status.textContent = `⏳ Generating ${count} image(s)...`;
+
+            const requests = Array.from({ length: count }, (_, i) =>
+                fetch(`https://api-inference.huggingface.co/models/${model}`, {
+                    method: 'POST',
+headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json',
+    'X-Wait-For-Model': 'true',   // ← add this
+},
+                    body: JSON.stringify({
+                        inputs: prompt,
+                        parameters: { seed: Math.floor(Math.random() * 999999) }
+                    })
+                })
+                .then(async res => {
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({}));
+                        throw new Error(err.error || `HTTP ${res.status}`);
+                    }
+                    return res.blob();
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    document.getElementById(`card-${i}`).innerHTML = `
+                        <img src="${url}" alt="Generated image ${i + 1}" />
+                        <a href="${url}" download="image-${i + 1}.png">⬇ Download</a>
+                    `;
+                    return true;
+                })
+                .catch(err => {
+                    document.getElementById(`card-${i}`).innerHTML = `
+                        <div class="placeholder">❌ ${err.message}</div>
+                    `;
+                    return false;
+                })
+            );
+
+            const results2 = await Promise.all(requests);
+            const succeeded = results2.filter(Boolean).length;
+            status.textContent = `✅ Done! ${succeeded}/${count} image(s) generated.`;
+            btn.disabled = false;
+        }
+    </script>
+</body>
+</html>
