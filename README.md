@@ -1,8 +1,7 @@
 # MingAI
-
 > A fast, modern AI assistant built for productivity, coding, and creative thinking.
 
-**MingAI** is a sleek, single-file web chat interface powered by AI. Built by **NexuCore**, it features a polished dark/light UI, persistent chat history, streaming responses, image generation, file attachments, web search, multi-language support, and customizable AI behavior — all with zero backend required.
+**MingAI** is a sleek, single-file web chat interface powered by AI. Built by **NexuCore**, it features a polished dark/light UI, persistent chat history, streaming responses, image generation, image vision, file attachments, text-to-speech, web search, multi-language support, and customizable AI behavior — all with zero backend required.
 
 ---
 
@@ -10,8 +9,10 @@
 
 - **Streaming responses** — AI replies appear in real time as they're generated
 - **Image generation** — Switch to MingImage 1.3 to generate images from text prompts
+- **Image vision** — Attach images to your messages and MingAI 2.4 will analyze and reason about them
+- **Text-to-speech** — Listen to any AI response read aloud with automatic language detection
 - **Online research** — Toggle web search to let MingAI pull in live, up-to-date information from the internet
-- **File attachments** — Attach code, text, and document files directly to your messages for MingAI to read and analyze
+- **File attachments** — Attach code, text, document, and image files directly to your messages
 - **Chat history** — Conversations are saved locally and accessible from the sidebar
 - **Markdown rendering** — Full markdown support including syntax-highlighted code blocks
 - **Customizable system prompt** — Tailor MingAI's personality and behavior via Settings
@@ -29,8 +30,10 @@
 |---|---|
 | Send a message | Type and press **Enter** (Shift+Enter for new line) |
 | Generate an image | Switch to **MingImage 1.3** tab and describe your image |
+| Attach an image | Click **+** → **Attach File** → select an image file |
 | Enable web search | Click **+** → toggle **Online Research** |
 | Attach a file | Click **+** → **Attach File** |
+| Listen to a response | Click the 🔊 button below any AI response |
 | New chat | Click **New chat** in the sidebar |
 | Switch chats | Click any conversation in the sidebar |
 | Delete a chat | Hover a conversation and click the trash icon |
@@ -45,7 +48,7 @@
 
 | Model | Purpose |
 |---|---|
-| **MingAI 2.1** | Text chat, coding, writing, analysis, file reading |
+| **MingAI 2.4** | Text chat, coding, writing, analysis, file reading, image vision |
 | **MingImage 1.3** | AI image generation from text prompts |
 
 ---
@@ -67,6 +70,7 @@ Your custom instructions are layered on top of MingAI's core behavior and saved 
 - **Vanilla HTML/CSS/JavaScript** — no frameworks
 - **[Marked.js](https://marked.js.org/)** — Markdown parsing
 - **[highlight.js](https://highlightjs.org/)** — Syntax highlighting
+- **Web Speech API** — Built-in browser text-to-speech
 - **localStorage** — Client-side chat history persistence
 
 ---
