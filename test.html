@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MingAI</title>
+    <link rel="icon" type="image/x-icon" href="https://mingai-nexucore.github.io/assets/logo.ico">
+    <meta name="description" content="MingAI is a powerful modern AI assistant built by NexuCore. Chat, code, brainstorm, and boost your productivity with intelligent AI conversations.">
+    <meta name="keywords" content="MingAI, AI assistant, NexuCore, chat AI, productivity AI, coding assistant">
+    <meta name="author" content="NexuCore">
+    <meta property="og:title" content="MingAI – Modern AI Assistant">
+    <meta property="og:description" content="A fast, intelligent AI assistant built for productivity, coding, and creative thinking.">
+    <meta property="og:image" content="https://mingai-nexucore.github.io/assets/thumb.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MingAI – Modern AI Assistant">
+    <meta name="twitter:description" content="Chat, code, and create with MingAI by NexuCore.">
+    <meta name="twitter:image" content="https://mingai-nexucore.github.io/assets/thumb.png">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        :root {
+            --bg: #0d0d0e; --card: #1a1a1c; --accent: #818cf8;
+            --text: #ececec; --text-muted: #71717a; --sidebar-width: 280px;
+        }
+        body.light-theme { --bg: #f4f4f5; --card: #ffffff; --accent: #6366f1; --text: #18181b; --text-muted: #71717a; }
+        body.light-theme #sidebar { background: #f7f7f8; border-right-color: #e4e4e7; }
+        body.light-theme .sidebar-brand { border-bottom-color: #e4e4e7; }
+        body.light-theme .sidebar-brand-name { color: #18181b; }
+        body.light-theme .sidebar-brand-sub { color: #a1a1aa; }
+        body.light-theme .history-label { color: #a1a1aa; }
+        body.light-theme .new-chat-btn { border-color: #e4e4e7; color: #71717a; }
+        body.light-theme .new-chat-btn:hover { background: #e4e4e7; border-color: #d4d4d8; color: #18181b; }
+        body.light-theme .history-item:hover { background: #ececed; }
+        body.light-theme .history-item:hover .history-item-title { color: #18181b; }
+        body.light-theme .history-item:hover .history-item-date { color: #71717a; }
+        body.light-theme .history-item.active { background: #e8e8f5; }
+        body.light-theme .history-item.active .history-item-title { color: var(--accent); }
+        body.light-theme .history-item:hover .history-delete-btn { color: #a1a1aa; }
+        body.light-theme .history-item:hover .history-delete-btn:hover { color: #ef4444; background: #fee2e2; }
+        body.light-theme .history-item-date { color: #a1a1aa; }
+        body.light-theme header { background: #f4f4f5; border-bottom-color: #e4e4e7; }
+        body.light-theme .footer-area { background: #f4f4f5; }
+        body.light-theme pre { background: #1e1e1e !important; }
+        body.light-theme .bubble { color: #3f3f46; }
+        body.light-theme .user-bubble { color: #18181b; }
+        body.light-theme .history-item.active { background: #ddd6fe; }
+        body.light-theme .input-container { background: #ffffff; border-color: #d4d4d8; }
+        body.light-theme textarea::-webkit-scrollbar-track { background: #f4f4f5; }
+        body.light-theme textarea::-webkit-scrollbar-thumb { background: #d4d4d8; }
+        body.light-theme textarea::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        body.light-theme textarea { color: #18181b; }
+        body.light-theme .settings-modal-bg { background: rgba(0,0,0,0.4); }
+        body.light-theme .settings-modal { background: #ffffff; border-color: #d4d4d8; }
+        body.light-theme .settings-modal h2 { color: #18181b; }
+        body.light-theme .settings-modal label { color: #3f3f46; }
+        body.light-theme .settings-modal textarea { background: #f4f4f5; border-color: #d4d4d8; color: #18181b; }
+        body.light-theme .settings-modal select { background: #f4f4f5; border-color: #d4d4d8; color: #18181b; }
+        body.light-theme .new-chat-btn { background: #e4e4e7; border-color: #d4d4d8; color: #18181b; }
+        body.light-theme .new-chat-btn:hover { background: #d4d4d8; border-color: var(--accent); }
+        body.light-theme .toggle-btn:hover { background: #e4e4e7; }
+        body.light-theme .suggestion-card:hover { border-color: var(--accent); background: #ececf4; }
+        body.light-theme .logo-main { background: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body.light-theme .history-item.active { background: #ddd6fe; color: var(--accent); border-left-color: var(--accent); }
+        body.light-theme .full-copy-wrapper .icon-btn { color: #52525b; }
+        body.light-theme .full-copy-wrapper .icon-btn:hover { color: #18181b; }
+        .bubble a { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(129,140,248,0.4); text-underline-offset: 3px; transition: opacity 0.15s; }
+        .bubble a:hover { opacity: 0.75; text-decoration-color: var(--accent); }
+        body.light-theme .bubble a { text-decoration-color: rgba(99,102,241,0.35); }
+        body.light-theme .bubble a:hover { text-decoration-color: var(--accent); }
+        * { box-sizing: border-box; }
+        #chat-window { scrollbar-width: thin; scrollbar-color: var(--accent) var(--card); overflow-x: hidden; overflow-y: auto; }
+        textarea::-webkit-scrollbar, pre::-webkit-scrollbar { width: 6px; height: 6px; }
+        textarea::-webkit-scrollbar-track, pre::-webkit-scrollbar-track { background: #1a1a1c; }
+        textarea::-webkit-scrollbar-thumb, pre::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        textarea::-webkit-scrollbar-thumb:hover, pre::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, system-ui, sans-serif; margin: 0; display: flex; min-height: 100dvh; height: 100dvh; overflow: hidden; }
+        #sidebar { width: var(--sidebar-width); background: #080809; border-right: 1px solid #1f1f22; display: flex; flex-direction: column; padding: 16px 12px; transition: transform 0.3s ease, width 0.3s ease, padding 0.3s ease; z-index: 1001; flex-shrink: 0; }
+        #sidebar.hidden { transform: translateX(-100%); width: 0; padding: 0; margin: 0; border: none; overflow: hidden; }
+        .sidebar-brand { padding: 6px 4px 16px; border-bottom: 1px solid #1f1f22; margin-bottom: 12px; flex-shrink: 0; }
+        .sidebar-brand-name { font-size: 1rem; font-weight: 700; color: #fff; letter-spacing: -0.2px; }
+        .sidebar-brand-sub { font-size: 11px; color: #3f3f46; margin-top: 2px; }
+        .new-chat-btn { width: 100%; padding: 9px 12px; background: transparent; border: 1px solid #2a2a2e; color: #a1a1aa; border-radius: 8px; cursor: pointer; margin-bottom: 16px; transition: all 0.15s; font-weight: 500; font-size: 0.88rem; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .new-chat-btn:hover { background: #111113; border-color: #3f3f46; color: #fff; }
+        .history-label { font-size: 10px; font-weight: 600; color: #3f3f46; text-transform: uppercase; letter-spacing: 0.8px; padding: 0 4px; margin-bottom: 4px; flex-shrink: 0; }
+        #history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 1px; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+        #history-list::-webkit-scrollbar { width: 6px; }
+        #history-list::-webkit-scrollbar-track { background: transparent; }
+        #history-list::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        #history-list::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        .history-item { padding: 8px 8px; border-radius: 7px; font-size: 0.83rem; color: #52525b; cursor: pointer; transition: all 0.15s ease; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 6px; position: relative; }
+        .history-item-content { flex: 1; overflow: hidden; min-width: 0; }
+        .history-item-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.83rem; color: #71717a; transition: color 0.15s; }
+        .history-item-date { font-size: 10px; color: #3f3f46; margin-top: 2px; transition: color 0.15s; }
+        .history-delete-btn { background: transparent; border: none; color: transparent; cursor: pointer; padding: 4px; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+        .history-delete-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; }
+        .history-item:hover .history-delete-btn { color: #52525b; }
+        .history-item:hover .history-delete-btn:hover { color: #f87171; background: #1f1f22; }
+        .history-item:hover { background: #111113; }
+        .history-item:hover .history-item-title { color: #d4d4d8; }
+        .history-item:hover .history-item-date { color: #52525b; }
+        .history-item.active { background: #111113; }
+        .history-item.active .history-item-title { color: var(--accent); }
+        .history-item.active .history-item-date { color: #52525b; }
+        #main-container { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; background: var(--bg); }
+        header { height: 60px; padding: 0 20px; display: flex; align-items: center; gap: 15px; background: var(--bg); border-bottom: 1px solid #1a1a1c; z-index: 1000; flex-shrink: 0; }
+        #chat-window::-webkit-scrollbar { width: 6px; }
+        #chat-window::-webkit-scrollbar-track { background: var(--card); }
+        #chat-window::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        #chat-window::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        .toggle-btn { background: transparent; border: none; color: var(--text); cursor: pointer; padding: 8px; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: 0.2s; }
+        .toggle-btn:hover { background: var(--card); color: var(--accent); }
+        .logo-top { font-weight: 700; font-size: 1.2rem; color: var(--accent); cursor: pointer; user-select: none; }
+        .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+        #hero-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; padding: 20px; overflow-y: auto; }
+        .logo-main { font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, #fff 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 40px; }
+        .suggestion-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 600px; width: 100%; }
+        .suggestion-card { background: var(--card); border: 1px solid #27272a; padding: 15px; border-radius: 12px; cursor: pointer; text-align: left; transition: all 0.2s; font-size: 0.9rem; }
+        .suggestion-card:hover { border-color: var(--accent); background: #232326; }
+        #chat-window { flex: 1; overflow-y: auto; padding: 20px; display: none; flex-direction: column; align-items: center; }
+        .chat-content { width: 100%; max-width: 750px; display: flex; flex-direction: column; gap: 30px; }
+        .role-wrapper { position: relative; width: 100%; }
+        .role-header { font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.5px; }
+        .user-header { color: var(--text-muted); }
+        .bubble { line-height: 1.8; font-size: 16px; color: #d1d1d1; }
+        .user-bubble { color: #fff; font-size: 1.1rem; font-weight: 500; }
+        pre { background: #000 !important; padding: 16px; border-radius: 12px; border: 1px solid #27272a; overflow-x: auto; position: relative; }
+        .icon-btn { background: transparent; color: var(--text-muted); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; transition: 0.2s; }
+        .icon-btn:hover { color: var(--text); }
+        .icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; }
+        .code-copy-btn { position: absolute; top: 10px; right: 10px; background: #27272a; border-radius: 4px; padding: 6px; }
+        .full-copy-wrapper { display: flex; justify-content: flex-start; margin-top: 10px; gap: 4px; }
+        .footer-area { padding: 12px 10px; display: flex; flex-direction: column; align-items: center; background: var(--bg); flex-shrink: 0; position: relative; z-index: 10; }
+        .input-container { width: 100%; max-width: 750px; background: var(--card); border: 1px solid #2d2d30; border-radius: 24px; padding: 8px 16px; display: flex; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        textarea { flex: 1; background: transparent; border: none; color: white; resize: none; outline: none; font-size: 16px; padding: 8px 0; height: 40px; max-height: 200px; overflow-y: auto; }
+        .send-btn { background: var(--accent); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; margin-left: 10px; }
+        .send-btn:hover { transform: scale(1.05); }
+        .send-btn:disabled { background: #3f3f46; cursor: not-allowed; }
+.attached-files-bar { display:flex; flex-wrap:wrap; gap:6px; width:100%; max-width:750px; margin-bottom:6px; }
+.attached-file-chip { display:inline-flex; align-items:center; gap:6px; background:rgba(129,140,248,0.12); border:1px solid rgba(129,140,248,0.3); color:var(--accent); border-radius:20px; padding:4px 10px; font-size:12px; font-weight:600; max-width:200px; }
+.attached-file-chip span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px; }
+.attached-file-chip button { background:none; border:none; color:var(--accent); cursor:pointer; padding:0; display:flex; align-items:center; font-size:14px; line-height:1; opacity:0.7; }
+.attached-file-chip button:hover { opacity:1; }
+body.light-theme .attached-file-chip { background:rgba(99,102,241,0.1); border-color:rgba(99,102,241,0.3); }
+        .typing-indicator { font-size: 12px; color: var(--accent); margin-bottom: 8px; display: none; width: 100%; max-width: 750px; }
+        .model-selector { display: flex; gap: 6px; margin-bottom: 10px; width: 100%; max-width: 750px; }
+        .model-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #2d2d30; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+        .model-btn:hover { border-color: var(--accent); color: var(--text); }
+        .model-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .model-btn .model-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.7; }
+        body.light-theme .model-btn { border-color: #d4d4d8; color: #71717a; }
+        body.light-theme .model-btn:hover { border-color: var(--accent); color: var(--text); }
+        body.light-theme .model-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+        /* FIX: image smaller */
+        .generated-image { max-width: 300px; width: 100%; border-radius: 12px; border: 1px solid #27272a; display: block; margin-top: 4px; user-select: none; -webkit-user-select: none; pointer-events: none; }
+        @keyframes img-shimmer { 0% { background-position: -800px 0; } 100% { background-position: 800px 0; } }
+        @keyframes img-pulse-border { 0%, 100% { border-color: #2d2d40; box-shadow: 0 0 0 0 rgba(129,140,248,0); } 50% { border-color: var(--accent); box-shadow: 0 0 12px 2px rgba(129,140,248,0.18); } }
+        @keyframes img-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* FIX: placeholder same size as image */
+        .img-generating-placeholder { width: 300px; max-width: 100%; height: 300px; border-radius: 12px; border: 1.5px solid #2d2d40; background: linear-gradient(90deg, #1a1a1c 20%, #2e2e3e 45%, #3a3a50 50%, #2e2e3e 55%, #1a1a1c 80%); background-size: 800px 100%; animation: img-shimmer 1.6s infinite linear, img-pulse-border 2s infinite ease-in-out; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; margin-top: 4px; position: relative; overflow: hidden; }
+        .img-generating-placeholder::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(129,140,248,0.06), transparent); animation: img-shimmer 1.6s infinite linear; background-size: 800px 100%; }
+        .img-gen-spinner { width: 36px; height: 36px; border: 2.5px solid rgba(129,140,248,0.2); border-top-color: var(--accent); border-radius: 50%; animation: img-spin 0.9s linear infinite; position: relative; z-index: 1; }
+        .img-gen-label { font-size: 12px; color: var(--accent); font-weight: 600; letter-spacing: 0.5px; opacity: 0.8; position: relative; z-index: 1; }
+        @keyframes img-shimmer-light { 0% { background-position: -800px 0; } 100% { background-position: 800px 0; } }
+        @keyframes img-pulse-border-light { 0%, 100% { border-color: #c4c4d4; box-shadow: 0 0 0 0 rgba(99,102,241,0); } 50% { border-color: var(--accent); box-shadow: 0 0 12px 2px rgba(99,102,241,0.18); } }
+        body.light-theme .img-generating-placeholder { background: linear-gradient(90deg, #e4e4e7 20%, #d4d4e8 45%, #c8c8f0 50%, #d4d4e8 55%, #e4e4e7 80%); background-size: 800px 100%; border-color: #c4c4d4; animation: img-shimmer-light 1.6s infinite linear, img-pulse-border-light 2s infinite ease-in-out; }
+        body.light-theme .img-generating-placeholder::before { background: none; animation: none; }
+        body.light-theme .img-gen-spinner { border-color: rgba(99,102,241,0.2); border-top-color: var(--accent); }
+        body.light-theme .img-gen-label { color: var(--accent); }
+        @media (max-width: 768px) {
+            #sidebar { position: fixed; height: 100%; left: 0; top: 0; transform: translateX(-100%); width: 80% !important; max-width: 300px; padding: 15px !important; border-right: 1px solid #27272a !important; overflow: hidden !important; }
+            #sidebar.hidden { transform: translateX(-100%); }
+            #sidebar.open, #sidebar.hidden.open { transform: translateX(0) !important; }
+            .suggestion-grid { grid-template-columns: 1fr; }
+            .logo-main { font-size: 2.2rem; }
+            .input-container { border-radius: 16px; }
+            #sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; backdrop-filter: blur(2px); }
+            #sidebar-overlay.visible { display: block; }
+        }
+        .settings-modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+        .settings-modal-bg.open { display: flex; }
+        .settings-modal { background: #1a1a1c; border: 1px solid #27272a; border-radius: 16px; padding: 28px; width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; margin: 20px; }
+        .settings-modal h2 { color: var(--text); font-size: 1.2rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
+        .settings-row { display: flex; flex-direction: column; gap: 8px; }
+        .settings-modal label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .settings-modal textarea { background: #0d0d0e; border: 1px solid #27272a; border-radius: 10px; color: var(--text); font-size: 14px; padding: 12px; resize: vertical; height: 120px; max-height: 200px; width: 100%; font-family: inherit; transition: border-color 0.2s; }
+        .settings-modal textarea:focus { border-color: var(--accent); outline: none; }
+        .settings-modal select { background: #0d0d0e; border: 1px solid #27272a; border-radius: 10px; color: var(--text); font-size: 14px; padding: 10px 12px; width: 100%; cursor: pointer; transition: border-color 0.2s; }
+        .settings-modal select:focus { border-color: var(--accent); outline: none; }
+        .settings-footer { display: flex; gap: 10px; justify-content: flex-end; }
+        .btn-cancel { padding: 10px 20px; background: transparent; border: 1px solid #27272a; color: var(--text-muted); border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        .btn-cancel:hover { border-color: var(--accent); color: var(--text); }
+        .btn-save { padding: 10px 20px; background: var(--accent); border: none; color: white; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: 0.2s; }
+        .btn-save:hover { opacity: 0.9; transform: scale(1.02); }
+        .theme-toggle-row { display: flex; align-items: center; justify-content: space-between; }
+        .theme-toggle { position: relative; width: 48px; height: 26px; }
+        .theme-toggle input { opacity: 0; width: 0; height: 0; }
+        .theme-slider { position: absolute; cursor: pointer; inset: 0; background: #27272a; border-radius: 26px; transition: 0.3s; }
+        .theme-slider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: 0.3s; }
+        input:checked + .theme-slider { background: var(--accent); }
+        input:checked + .theme-slider:before { transform: translateX(22px); }
+    </style>
+</head>
+<body>
+<aside id="sidebar" class="hidden">
+    <div class="sidebar-brand"><div class="sidebar-brand-name">Your chats</div></div>
+    <button class="new-chat-btn" onclick="startNewChat()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        New chat
+    </button>
+    <div class="history-label">Recent</div>
+    <div id="history-list"></div>
+</aside>
+<div id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+<input type="file" id="file-upload-input" accept=".txt,.js,.css,.html,.htm,.ts,.tsx,.jsx,.py,.java,.c,.cpp,.cs,.php,.rb,.go,.rs,.swift,.kt,.sh,.json,.xml,.yaml,.yml,.md,.sql,.r,.lua,.png,.jpg,.jpeg,.gif,.webp,.bmp" style="display:none;" multiple onchange="handleFileUpload(event)">
+<div id="main-container">
+    <header>
+        <button class="toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <div class="logo-top" onclick="location.reload()">MingAI</div>
+        <div class="header-right">
+            <button class="toggle-btn" onclick="openSettings()" aria-label="Settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+    <div id="hero-screen">
+        <div class="logo-main">MingAI</div>
+        <div class="subtitle">How can I help you be productive today?</div>
+        <div class="suggestion-grid">
+            <div class="suggestion-card" onclick="quickFill('Create a Python script for a simple web scraper')"><b>Code</b><br>Write a Python script for a web scraper</div>
+            <div class="suggestion-card" onclick="quickFill('Help me brainstorm names for a tech startup')"><b>Brainstorm</b><br>Startup names for a tech company</div>
+            <div class="suggestion-card" onclick="quickFill('Explain quantum physics like I am five years old')"><b>Explain</b><br>Quantum physics for a 5-year old</div>
+            <div class="suggestion-card" onclick="quickFill('Write a formal email to my boss about a promotion')"><b>Write</b><br>Formal email about a promotion</div>
+        </div>
+    </div>
+    <div id="chat-window"><div class="chat-content" id="chat-display"></div></div>
+    <div class="footer-area" style="position:relative;">
+<div id="typing" class="typing-indicator">MingAI is thinking...</div>
+<div id="attached-files-bar" class="attached-files-bar" style="display:none;"></div>
+<div class="model-selector">
+<button class="model-btn active" id="model-btn-text" onclick="switchModel('text')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>MingAI 2.1</button>
+<button class="model-btn" id="model-btn-image" onclick="switchModel('image')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>MingImage 1.3</button>
+        </div>
+
+<div class="input-container" style="position:relative;">
+    <!-- Plus popup -->
+<div id="plus-popup" style="display:none; position:absolute; bottom:100%; left:0; background:var(--card); border:1px solid #27272a; border-radius:12px; padding:8px; width:220px; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+<div style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px; padding:4px 8px 6px;">Capabilities</div>
+<div style="display:flex; flex-direction:column; gap:2px;">
+    <div onclick="document.getElementById('file-upload-input').click(); document.getElementById('plus-popup').style.display='none';" style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:6px 8px; border-radius:8px; transition:background 0.15s;" onmouseover="this.style.background='rgba(129,140,248,0.1)'" onmouseout="this.style.background='transparent'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        <span style="font-size:13px; font-weight:500; color:var(--text);">Attach File</span>
+    </div>
+    <label style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:6px 8px; border-radius:8px; transition:background 0.15s;" onmouseover="this.style.background='rgba(129,140,248,0.1)'" onmouseout="this.style.background='transparent'">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <span style="font-size:13px; font-weight:500; color:var(--text);">Online Research</span>
+            </div>
+            <label class="theme-toggle" style="transform:scale(0.8); flex-shrink:0;">
+                <input type="checkbox" id="toggle-search" onchange="updateCapabilityBadges()">
+                <span class="theme-slider"></span>
+            </label>
+        </label>
+    </div>
+</div>
+    <button id="plus-btn" onclick="togglePlusPopup(event)" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; padding:4px 6px; display:flex; align-items:center; justify-content:center; border-radius:8px; transition:0.2s; flex-shrink:0;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    </button>
+    <div id="capability-badges" style="display:flex; gap:4px; align-items:center; flex-wrap:wrap; margin-right:6px;"></div>
+    <textarea id="user-input" placeholder="Ask MingAI anything..."></textarea>
+    <button id="send-btn" class="send-btn" onclick="askMing()">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"></path><path d="M22 2L15 22L11 13L2 9L22 2Z"></path></svg>
+    </button>
+</div>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 12px;">MingAI | Made by NexuCore</p>
+    </div>
+</div>
+<div class="settings-modal-bg" id="settings-modal-bg" onclick="handleModalBgClick(event)">
+    <div class="settings-modal">
+        <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            Settings
+        </h2>
+        <div class="settings-row">
+            <label>Theme</label>
+            <div class="theme-toggle-row">
+                <span style="font-size:14px; color: var(--text);">Light Mode</span>
+                <label class="theme-toggle">
+                    <input type="checkbox" id="theme-checkbox" onchange="applyThemeFromCheckbox()">
+                    <span class="theme-slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="settings-row">
+            <label>AI Behavior / System Prompt</label>
+            <textarea id="settings-system-prompt" placeholder="Describe how MingAI should behave..."></textarea>
+        </div>
+        <div class="settings-row">
+            <label>Language</label>
+            <select id="settings-language">
+                <option value="en">🇬🇧 English</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="fr">🇫🇷 Français</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="it">🇮🇹 Italiano</option>
+                <option value="pt">🇵🇹 Português</option>
+                <option value="nl">🇳🇱 Nederlands</option>
+                <option value="pl">🇵🇱 Polski</option>
+                <option value="ru">🇷🇺 Русский</option>
+                <option value="zh">🇨🇳 中文</option>
+                <option value="ja">🇯🇵 日本語</option>
+                <option value="ko">🇰🇷 한국어</option>
+                <option value="ar">🇸🇦 العربية</option>
+                <option value="hi">🇮🇳 हिन्दी</option>
+                <option value="tr">🇹🇷 Türkçe</option>
+                <option value="id">🇮🇩 Bahasa Indonesia</option>
+                <option value="pirate">🏴‍☠️ Pirate-ish</option>
+            </select>
+        </div>
+        <div class="settings-footer">
+            <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
+            <button class="btn-save" onclick="saveSettings()">Save</button>
+        </div>
+    </div>
+</div>
+<script>
+var _currentModel = 'text';
+const _renderer = new marked.Renderer();
+const _origLink = _renderer.link.bind(_renderer);
+_renderer.link = function(href, title, text) {
+    const html = _origLink(href, title, text);
+    return html.replace('<a ', '<a target="_blank" rel="noopener noreferrer" ');
+};
+marked.setOptions({ renderer: _renderer });
+function switchModel(m) { _currentModel = m; document.getElementById('model-btn-text').classList.toggle('active', m === 'text'); document.getElementById('model-btn-image').classList.toggle('active', m === 'image'); var isImage = m === 'image'; document.getElementById('plus-btn').style.display = isImage ? 'none' : 'flex'; document.getElementById('plus-popup').style.display = 'none'; if (isImage) { document.getElementById('toggle-search').checked = false; updateCapabilityBadges(); } window._pendingModelSwitch = m; setTimeout(function() { var inp = document.getElementById('user-input'); var strings = window._UI_STRINGS; var lang = typeof _getCurrentLang !== 'undefined' ? _getCurrentLang() : (localStorage.getItem('mingai_language') || 'en'); if (strings) { var s = strings[lang] || strings['en']; inp.placeholder = (window._pendingModelSwitch === 'image') ? s.imgPlaceholder : s.placeholder; } }, 0); }
+(function(){
+var __ll_1III=[49,46,251,246,62,177,92,29,125,252,36,232,219,34,99,223,184,91,74,140,176,6,173,64,183,220,93,138,166,16,253,163,136,59,12,130,121,87,3,183,133,118,79,93,28,190,217,126,182,96,6,204,72,165,129,30,179,255,162,127,245,226,80,225,143,150,248,250,207,235,241,179,113];
+var __l__0l0O=[66,69,214,153,76,156,42,44,80,152,70,138,185,71,80,187,220,62,121,187,132,51,207,112,135,190,101,189,150,41,196,197,176,94,63,186,77,100,49,131,179,70,121,63,42,137,188,73,213,84,53,170,112,196,184,123,213,206,155,74,148,135,51,130,187,160,193,204,169,137,198,209,69];
+var _lllII00l=[97,114,99,101,101,45,97,105,47,116,114,105,110,105,116,121,45,108,97,114,103,101,45,112,114,101,118,105,101,119,58,102,114,101,101];
+function _0I___0OI(e,k){return e.map(function(v,i){return String.fromCharCode(v^k[i]);}).join('');}
+function _O01lI_O1(b){return atob(b);}
+var _1II1llOl=_0I___0OI(__ll_1III,__l__0l0O);
+var _1101l_O0=String.fromCharCode.apply(null,_lllII00l);
+var _lOl01_01=_O01lI_O1('aHR0cHM6Ly9vcGVucm91dGVyLmFpL2FwaS92MS9jaGF0L2NvbXBsZXRpb25z');
+var _0I_ll_I1=_O01lI_O1('QXV0aG9yaXphdGlvbg==');
+var _lIlO1O_1=_O01lI_O1('Q29udGVudC1UeXBl');
+var _I11I_1__=_O01lI_O1('YXBwbGljYXRpb24vanNvbg==');
+var __l0_I0_I=_O01lI_O1('QmVhcmVyIA==');
+var _IOO1__0I=null;
+var _CORE_=`You are MingAI 2.1, an AI assistant created by NexuCore. Always refer to yourself as "MingAI 2.1" and your creators as "NexuCore". Never mention any other AI model names, companies, or underlying technology. Use markdown formatting in your responses. You also have a companion image generation model called "MingImage 1.3", also made by NexuCore, which users can access by switching to the MingImage 1.3 tab in the interface. Always give detailed, thorough, and informative responses — explain concepts fully, provide examples, include relevant context, and go the extra mile to make sure the user truly understands. Use emojis occasionally to make responses feel friendly and engaging, but don't overdo it. If anyone asks about the MingAI homepage or website, tell them it is https://mingai-nexucore.github.io/home/ If anyone asks about MingAI documentation, guides, how to use MingAI, API docs, or anything related to MingAI docs, direct them to https://mingai-nexucore.github.io/docs/ The system has automatically detected the current date and time as: ${new Date().toLocaleString('en-US', {weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'})}. Use this when answering any time or date related questions. Do not mention how you received this information. Do not explain it, reference it, or bring it up at all. If asked what time it is, just answer naturally and concisely like a human would. You are fully capable of reading, analyzing, and working with file contents that users attach to their messages. When a user attaches a file, its contents will be included directly in their message. Read it, understand it, and respond helpfully — never say you cannot access or read attached files.`;
+var __1lIl1O1=[{role:'system',content:_CORE_}];
+var _lI0_1I_O=`<svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+var _lI0_TTS_O=`<svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>`;
+var _lI0_DL_O=`<svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`;
+function _xor(a,b){return a.map(function(v,i){return String.fromCharCode(v^b[i]);}).join('');}
+var _iuk=[40,127,1,189,234,189,138,13,160,67,229,31,12,76,22,170,40,4,83,53,70,214,60,85,118,64,46,147,15,219,177,49,95,70];
+var _ivk=[64,11,117,205,153,135,165,34,199,38,139,49,124,35,122,198,65,106,50,65,47,185,82,38,88,33,71,188,102,182,208,86,58,105];
+var _IMG_API_URL=_xor(_iuk,_ivk);
+var _iak=[95,26,247,225,39,41,55,16,131,225,119,40,200,75,76,130,216,15,55,113,29,55,200,82,50,208,114,70,240,61,188,21,53,7,83];
+var _ibk=[44,113,168,167,83,109,84,40,198,144,16,127,157,38,38,179,142,88,127,40,126,103,159,97,70,165,42,33,150,100,140,100,108,116,10];
+var _IMG_API_KEY=_xor(_iak,_ibk);
+var _imk=[164,98,27,76,72,12,126,126];
+var _ink=[205,15,122,43,45,98,83,74];
+var _IMG_MODEL=_xor(_imk,_ink);
+var _IMG_WIDTH = 1024;
+var _IMG_HEIGHT = 1024;
+var _IMG_ENHANCE = false;
+var _tak=[27,128,176,95,156,46,40,3,51,115,146,102,188,202,92,126,153,130,23,221,223,41,182,167,121,130,242,193,54,238,126,34,192,11,251,129,237,93,159,171,149,189,237,142,213,177,167,232,149,87,43,110,102,76,66,201,150,231];
+var _tbk=[111,246,220,38,177,74,77,117,30,66,241,7,140,143,110,83,206,195,79,174,145,72,194,150,73,183,129,173,88,220,46,88,178,64,186,226,223,31,210,194,193,213,222,212,236,216,210,137,244,99,99,43,17,43,123,240,255,143];
+var _TKEY=_xor(_tak,_tbk);
+var _tuk=[28,22,29,29,25,18,19,1,25,29,15,18,26,30,29,24,1,18,26,10,29,18,19,1,22,1,30,24];
+var _tvk=[84,71,90,90,67,122,122,106,67,90,119,122,95,67,90,67,106,122,95,67,90,122,122,106,67,90,84,67];
+var _TURL=_xor(_tuk,_tvk);
+
+function _O_OI1II_(){ var u=localStorage.getItem('mingai_system_prompt'); return u?_CORE_+'\n\nAdditional behavior instructions: '+u:_CORE_; }
+function _001_0O0O(){ var _sp=document.getElementById('settings-system-prompt'); var _tc=document.getElementById('theme-checkbox'); var _mb=document.getElementById('settings-modal-bg'); var _sl=document.getElementById('settings-language'); if(_sp) _sp.value=localStorage.getItem('mingai_system_prompt')||''; if(_tc){ var _l=localStorage.getItem('mingai_theme')==='light'; _tc.checked=_l; } if(_sl) _sl.value=_getCurrentLang(); if(_mb) _mb.classList.add('open'); }
+function _1II0Olll(){ document.getElementById('settings-modal-bg').classList.remove('open'); }
+function _I_I_O0lO(e){ if(e.target===document.getElementById('settings-modal-bg'))__l_01_1l(); }
+function _O0O010l_(){ var _l=document.getElementById('theme-checkbox').checked; document.body.classList.toggle('light-theme',_l); }
+function __l_01_1l(){ var _p=document.getElementById('settings-system-prompt').value.trim(); var _l=document.getElementById('theme-checkbox').checked; if(_p){localStorage.setItem('mingai_system_prompt',_p);}else{localStorage.removeItem('mingai_system_prompt');} if(_l){localStorage.setItem('mingai_theme','light');document.body.classList.add('light-theme');}else{localStorage.setItem('mingai_theme','dark');document.body.classList.remove('light-theme');} if(__1lIl1O1.length>0&&__1lIl1O1[0].role==='system'){__1lIl1O1[0].content=_O_OI1II_();} _1II0Olll(); }
+if(localStorage.getItem('mingai_theme')==='light'){document.body.classList.add('light-theme');}
+function _1OIOl__1(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('visible'); }
+function _0I0l_1_0(){ var _s=document.getElementById('sidebar'); var _o=document.getElementById('sidebar-overlay'); if(window.innerWidth<=768){var _op=_s.classList.toggle('open');_o.classList.toggle('visible',_op);}else{_s.classList.toggle('hidden');} _applyLanguage(_getCurrentLang()); _01Oll11I(); }
+function _0II1I00l(){ var _c=JSON.parse(localStorage.getItem('mingai_chats')||'[]'); var _d={id:_IOO1__0I,history:__1lIl1O1.map(function(m){ return Object.assign({},m); }),timestamp:Date.now()}; var _i=_c.findIndex(function(x){return x.id===_IOO1__0I;}); if(_i>-1)_c[_i]=_d;else _c.unshift(_d); while(JSON.stringify(_c).length>4000000){_c.pop();} try{localStorage.setItem('mingai_chats',JSON.stringify(_c));}catch(e){_c.pop();localStorage.setItem('mingai_chats',JSON.stringify(_c));} _01Oll11I(); }
+function _lI0ll_Ol(_t){ var _d=new Date(_t),_n=new Date(),_df=_n-_d; var _lt=(typeof _UI_STRINGS !== 'undefined' && (_UI_STRINGS[_getCurrentLang()]||_UI_STRINGS['en'])) || {}; var _jn=_lt.justNow||'Just now'; var _ma=_lt.mAgo||'m ago'; var _ha=_lt.hAgo||'h ago'; var _da2=_lt.dAgo||'d ago'; if(_df<60000)return _jn; if(_df<3600000)return Math.floor(_df/60000)+_ma; if(_df<86400000)return Math.floor(_df/3600000)+_ha; if(_df<604800000)return Math.floor(_df/86400000)+_da2; return _d.toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
+function _0II_O0I1(_id,e){ e.stopPropagation(); var _c=JSON.parse(localStorage.getItem('mingai_chats')||'[]'); _c=_c.filter(function(x){return x.id!==_id;}); localStorage.setItem('mingai_chats',JSON.stringify(_c)); if(_IOO1__0I===_id){_IOO1__0I=null;__1lIl1O1=[{role:'system',content:_O_OI1II_()}];document.getElementById('chat-display').innerHTML='';document.getElementById('chat-window').style.display='none';document.getElementById('hero-screen').style.display='flex';} _01Oll11I(); }
+function _01Oll11I(){ var _l=document.getElementById('history-list'); var _c=JSON.parse(localStorage.getItem('mingai_chats')||'[]'); _l.innerHTML=''; _c.forEach(function(_ch){ var _firstUserMsg = _ch.history.find(function(m){return m.role==='user';}) || {}; var _rawContent = _firstUserMsg._displayContent || (_firstUserMsg.content||'Empty Chat').replace(/\n\n--- Attached Files ---[\s\S]*?--- End of Attached Files ---/g,'').replace(/\n\nCurrent web search results[\s\S]*$/,'').trim() || 'Empty Chat'; var _fm=_rawContent.replace('[Image prompt] ','').substring(0,60); var _it=document.createElement('div'); _it.className='history-item'+(_ch.id===_IOO1__0I?' active':''); var _co=document.createElement('div'); _co.className='history-item-content'; var _ti=document.createElement('div'); _ti.className='history-item-title'; _ti.innerText=_fm; var _da=document.createElement('div'); _da.className='history-item-date'; _da.innerText=_lI0ll_Ol(_ch.timestamp||parseInt(_ch.id)); _co.appendChild(_ti); _co.appendChild(_da); var _de=document.createElement('button'); _de.className='history-delete-btn'; _de.innerHTML='<svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4h6v2"></path></svg>'; _de.title='Delete chat'; _de.onclick=function(e){_0II_O0I1(_ch.id,e);}; _it.appendChild(_co); _it.appendChild(_de); _it.onclick=function(){_00OI0__I(_ch.id);if(window.innerWidth<=768)_1OIOl__1();}; _l.appendChild(_it); }); }
+
+function _parseImgMsg(content) {
+    var prefix = '[MingImage url=';
+    var promptKey = ' prompt=';
+    if (content.indexOf(prefix) !== 0) return null;
+    var rest = content.slice(prefix.length);
+    var pIdx = rest.indexOf(promptKey);
+    if (pIdx === -1) return null;
+    var url = rest.slice(0, pIdx);
+    var prompt = rest.slice(pIdx + promptKey.length);
+    if (prompt.charAt(prompt.length - 1) === ']') prompt = prompt.slice(0, -1);
+    return [url, prompt];
+}
+
+function _00OI0__I(_id){ var _c=JSON.parse(localStorage.getItem('mingai_chats')||'[]'); var _ch=_c.find(function(x){return x.id===_id;}); if(!_ch)return; _IOO1__0I=_id; __1lIl1O1=_ch.history; document.getElementById('hero-screen').style.display='none'; document.getElementById('chat-window').style.display='flex'; document.getElementById('chat-display').innerHTML=''; __1lIl1O1.forEach(function(m){ if(m.role!=='system'){ var _isImgUser = m.role==='user' && m.content.startsWith('[Image prompt] '); var _displayContent = _isImgUser ? m.content.replace('[Image prompt] ','') : (m._displayContent || m.content.replace(/\n\nCurrent web search results[\s\S]*$/, '').replace(/\n\n--- Attached Files ---[\s\S]*?--- End of Attached Files ---/g, '').trim()); var _r = __1O__1O0(m.role, m.role === 'assistant' ? '' : _displayContent, (m.role === 'user' && m._files && m._files.length > 0) ? { files: m._files } : undefined); if(m.role==='assistant'){ var _parsed = _parseImgMsg(m.content); if(_parsed){ _renderImageBubble(_r.bubble, _parsed[0], _parsed[1]); } else { _r.bubble.innerHTML = marked.parse(m.content); _OlIIl1l0(_r.wrapper,m.content);__1O1_1(_r.bubble);_r.bubble.querySelectorAll('pre code').forEach(function(el){hljs.highlightElement(el);}); } } } }); _01Oll11I(); }
+
+function startNewChat(){ _IOO1__0I=null; __1lIl1O1=[{role:'system',content:_O_OI1II_()}]; document.getElementById('chat-display').innerHTML=''; document.getElementById('chat-window').style.display='none'; document.getElementById('hero-screen').style.display='flex'; _01Oll11I(); if(window.innerWidth<=768)_1OIOl__1(); }
+function quickFill(_t){ document.getElementById('user-input').value=_t; askMing(); }
+function _renderImageBubble(_ab, _url, _prompt) { var _img = document.createElement('img'); _img.className = 'generated-image'; _img.alt = _prompt; _img.src = _url; _ab.appendChild(_img); var _dl = document.createElement('button'); _dl.className = 'icon-btn'; _dl.title = 'Download image'; _dl.innerHTML = _lI0_DL_O; _dl.onclick = function() { fetch(_url) .then(function(r){ return r.blob(); }) .then(function(blob){ var burl = URL.createObjectURL(blob); var a = document.createElement('a'); a.href = burl; a.download = (_prompt.substring(0,40).replace(/[^a-z0-9]/gi,'_') || 'mingimage') + '.jpg'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function(){ URL.revokeObjectURL(burl); }, 1000); }) .catch(function(){ window.open(_url, '_blank'); }); }; _ab.appendChild(_dl); }
+async function askImage() { var _inp = document.getElementById('user-input'); var _txt = _inp.value.trim(); if (!_txt) return; var _originalTxt = _txt; try { var _tRes = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(_txt) + '&langpair=autodetect|en'); var _tData = await _tRes.json(); if (_tData.responseStatus === 200 && _tData.responseData && _tData.responseData.translatedText) { _txt = _tData.responseData.translatedText; } } catch(e) {} if (!_IOO1__0I) _IOO1__0I = Date.now().toString(); document.getElementById('hero-screen').style.display = 'none'; document.getElementById('chat-window').style.display = 'flex'; _inp.value = ''; __1O__1O0('user', _originalTxt); var _ld = document.getElementById('typing'); var _btn = document.getElementById('send-btn'); _ld.style.display = 'block'; _ld.textContent = 'MingImage is generating...'; _btn.disabled = true; try { var _seed = 0; var _url = _IMG_API_URL + encodeURIComponent(_txt) + '?model=' + _IMG_MODEL + '&width=' + _IMG_WIDTH + '&height=' + _IMG_HEIGHT + '&seed=' + _seed + '&enhance=' + _IMG_ENHANCE + '&key=' + _IMG_API_KEY; var _ro = __1O__1O0('assistant', ''); var _ab = _ro.bubble; var _ph = document.createElement('div'); _ph.className = 'img-generating-placeholder'; var _sp = document.createElement('div'); _sp.className = 'img-gen-spinner'; var _lb = document.createElement('div'); _lb.className = 'img-gen-label'; _lb.textContent = 'Generating image...'; _ph.appendChild(_sp); _ph.appendChild(_lb); _ab.appendChild(_ph); document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight; __1lIl1O1.push({role:'user', content:'[Image prompt] ' + _originalTxt}); __1lIl1O1.push({role:'assistant', content:'[MingImage url=' + _url + ' prompt=' + _originalTxt + ']'}); _0II1I00l(); var _img = document.createElement('img'); _img.className = 'generated-image'; _img.alt = _txt; _img.src = _url; _img.onload = function() { _ab.removeChild(_ph); _renderImageBubble(_ab, _url, _txt); _ld.style.display = 'none'; _btn.disabled = false; _ld.textContent = 'MingAI is thinking...'; document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight; }; _img.onerror = function() { _ab.removeChild(_ph); _ab.innerText = 'Error generating image. Please try again.'; _ld.style.display = 'none'; _btn.disabled = false; _ld.textContent = 'MingAI is thinking...'; }; _ab.appendChild(_img); _img.style.display = 'none'; document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight; } catch(err) { _ld.style.display = 'none'; _btn.disabled = false; _ld.textContent = 'MingAI is thinking...'; } }
+async function askMing(){ if (_currentModel === 'image') { await askImage(); return; } var _inp=document.getElementById('user-input'); var _txt=_inp.value.trim(); if(!_txt && _attachedFiles.length === 0)return; if(!_txt) _txt = 'Please analyze the attached file(s).'; if(!_IOO1__0I)_IOO1__0I=Date.now().toString(); document.getElementById('hero-screen').style.display='none'; document.getElementById('chat-window').style.display='flex'; _inp.value=''; var _previewFiles = _attachedFiles.map(function(f){ return f.isImage ? { name: f.name, isImage: true, content: f.content } : f.name; }); __1O__1O0('user', _txt, { files: _previewFiles }); var _ld=document.getElementById('typing'); var _btn=document.getElementById('send-btn'); _ld.style.display='block'; _btn.disabled=true; var _ro=__1O__1O0('assistant',''); var _ab=_ro.bubble; var _wr=_ro.wrapper; if(__1lIl1O1.length===0||__1lIl1O1[0].role!=='system'){__1lIl1O1.unshift({role:'system',content:_O_OI1II_()});}else{__1lIl1O1[0].content=_O_OI1II_();} var searchContext = ''; if (document.getElementById('toggle-search').checked) { try { var sRes = await fetch('https://corsproxy.io/?https://api.tavily.com/search', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ api_key: _TKEY, query: _txt, max_results: 5 }) }); var sData = await sRes.json(); if (sData.results && sData.results.length > 0) { searchContext = '\n\nCurrent web search results (today\'s date: ' + new Date().toDateString() + '):\n' + sData.results.map(function(r){ return '- ' + r.title + ': ' + r.content; }).join('\n'); } } catch(e) {} } var _fileCtx = buildFileContext(); var _imgCtx = await analyzeImagesWithGemini(_attachedFiles, _txt); __1lIl1O1.push({role:'user', content:_txt + searchContext + _fileCtx + _imgCtx, _displayContent: _txt, _files: _previewFiles}); _attachedFiles = []; renderAttachedFilesBar(); try{ var _hd={}; _hd[_0I_ll_I1]=__l0_I0_I+_1II1llOl; _hd[_lIlO1O_1]=_I11I_1__; var _res=await fetch(_lOl01_01,{method:'POST',headers:_hd,body:JSON.stringify({model:_1101l_O0,messages:__1lIl1O1.map(function(m){ return {role:m.role, content:m.content}; }),stream:true})}); var _rd=_res.body.getReader(); var _dc=new TextDecoder(); var _ft=''; while(true){ var _rv=await _rd.read(); if(_rv.done)break; var _cks=_dc.decode(_rv.value).split('\n'); for(var _ci=0;_ci<_cks.length;_ci++){ var _ck=_cks[_ci]; if(_ck.startsWith('data: ')){ var _da=_ck.replace('data: ',''); if(_da==='[DONE]')break; try{var _js=JSON.parse(_da);_ft+=_js.choices[0].delta.content||'';_ab.innerHTML=marked.parse(_ft);__1O1_1(_ab);_ab.querySelectorAll('pre code').forEach(function(el){hljs.highlightElement(el);});var _cw=document.getElementById('chat-window');_cw.scrollTop=_cw.scrollHeight;}catch(e){} } } } __1lIl1O1.push({role:'assistant',content:_ft}); _OlIIl1l0(_wr,_ft); _0II1I00l(); }catch(err){ _ab.innerText='Error contacting MingAI.'; }finally{ _ld.style.display='none'; _btn.disabled=false; } }
+function _OlIIl1l0(_wr,_txt){ if(_wr.querySelector('.full-copy-wrapper'))return; var _ft=document.createElement('div'); _ft.className='full-copy-wrapper'; var _fc=document.createElement('button'); _fc.className='icon-btn'; _fc.title='Copy'; _fc.innerHTML=_lI0_1I_O; _fc.onclick=function(){navigator.clipboard.writeText(_txt);_fc.style.color='var(--accent)';setTimeout(function(){_fc.style.color='';},2000);}; _ft.appendChild(_fc); var _ttsBtn=document.createElement('button'); _ttsBtn.className='icon-btn'; _ttsBtn.title='Read aloud'; _ttsBtn.innerHTML=_lI0_TTS_O; var _ttsActive=false; _ttsBtn.onclick=function(){ if(_ttsActive){ window.speechSynthesis.cancel(); _ttsActive=false; _ttsBtn.style.color=''; return; } var _clean=_txt.replace(/```[\s\S]*?```/g,'code block').replace(/`([^`]*)`/g,'$1').replace(/\*\*(.*?)\*\*/g,'$1').replace(/\*(.*?)\*/g,'$1').replace(/#{1,6}\s/g,'').replace(/\[([^\]]+)\]\([^\)]+\)/g,'$1').replace(/>\s/g,'').trim(); var _utt=new SpeechSynthesisUtterance(_clean); _utt.rate=1; _utt.pitch=1; _utt.lang='en-US'; _ttsActive=true; _ttsBtn.style.color='var(--accent)'; _utt.onend=function(){ _ttsActive=false; _ttsBtn.style.color=''; }; _utt.onerror=function(){ _ttsActive=false; _ttsBtn.style.color=''; }; window.speechSynthesis.speak(_utt); }; _ft.appendChild(_ttsBtn); _wr.appendChild(_ft); }
+function __1O1_1(_cn){ _cn.querySelectorAll('pre').forEach(function(_pr){ if(_pr.querySelector('.code-copy-btn'))return; var _b=document.createElement('button'); _b.className='icon-btn code-copy-btn'; _b.innerHTML=_lI0_1I_O; _b.onclick=function(){var _cd=_pr.querySelector('code').innerText;navigator.clipboard.writeText(_cd);_b.style.color='var(--accent)';setTimeout(function(){_b.style.color='';},2000);}; _pr.appendChild(_b); }); }
+function __1O__1O0(_role, _txt, _opts) { var _dp = document.getElementById('chat-display'); var _wr = document.createElement('div'); _wr.className = 'role-wrapper'; var _hd = document.createElement('div'); _hd.className = 'role-header' + (_role === 'user' ? ' user-header' : ''); _hd.innerText = _role === 'user' ? 'You' : 'MingAI'; var _bb = document.createElement('div'); _bb.className = 'bubble' + (_role === 'user' ? ' user-bubble' : ''); var _displayTxt = (_opts && _opts.displayText) ? _opts.displayText : _txt; _bb.innerHTML = _displayTxt ? (_role === 'user' ? _displayTxt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') : marked.parse(_displayTxt)) : ''; if (_role === 'user' && _opts && _opts.files && _opts.files.length > 0) { var _fb = document.createElement('div'); _fb.style.cssText = 'display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;'; _opts.files.forEach(function(fname) { var _chip = document.createElement('div'); if (fname && typeof fname === 'object' && fname.isImage) { _chip.style.cssText = 'border-radius:10px; overflow:hidden; border:1px solid rgba(129,140,248,0.4); width:80px; height:80px; flex-shrink:0; position:relative;'; _chip.innerHTML = '<img src="' + fname.content + '" style="width:80px;height:80px;object-fit:cover;display:block;" title="' + fname.name + '">'; } else { var _n = (fname && typeof fname === 'object') ? fname.name : fname; var _ext = _n.split('.').pop().toLowerCase(); var _iconColor = _ext === 'pdf' ? '#f87171' : 'var(--accent)'; _chip.style.cssText = 'display:inline-flex; align-items:center; gap:6px; background:rgba(129,140,248,0.1); border:1px solid rgba(129,140,248,0.25); border-radius:8px; padding:5px 10px; font-size:12px; font-weight:600; color:' + _iconColor + '; max-width:220px;'; _chip.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;" title="' + _n + '">' + _n + '</span>'; } _fb.appendChild(_chip); }); _bb.appendChild(_fb); } _wr.appendChild(_hd); _wr.appendChild(_bb); _dp.appendChild(_wr); var _cw = document.getElementById('chat-window'); _cw.scrollTop = _cw.scrollHeight; return { bubble: _bb, wrapper: _wr }; }
+document.addEventListener('contextmenu',function(e){if(e.target.classList.contains('generated-image'))e.preventDefault();});
+document.addEventListener('dragstart',function(e){if(e.target.classList.contains('generated-image'))e.preventDefault();});
+document.getElementById('user-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();askMing();}});
+document.getElementById('user-input').addEventListener('input', function() { this.style.height = '40px'; this.style.height = this.scrollHeight + 'px'; });
+window.openSettings=_001_0O0O; window.closeSettings=_1II0Olll; window.handleModalBgClick=_I_I_O0lO; window.applyThemeFromCheckbox=_O0O010l_; window.saveSettings=__l_01_1l; window.toggleSidebar=_0I0l_1_0; window.closeMobileSidebar=_1OIOl__1; window.askMing=askMing; window.startNewChat=startNewChat; window.quickFill=quickFill;
+window._UI_STRINGS = _UI_STRINGS = {
+    en: { newChat:'New chat', recent:'Recent', placeholder:'Ask MingAI anything...', imgPlaceholder:'Describe an image to generate...', thinking:'MingAI is thinking...', generating:'MingImage is generating...', genImg:'Generating image...', search:'Search', onlineResearch:'Online Research', attachFile:'Attach File', capabilities:'Capabilities', yourChats:'Your chats', settingsTitle:'Settings', theme:'Theme', lightMode:'Light Mode', aiBehavior:'AI Behavior / System Prompt', aiBehaviorPlaceholder:'Describe how MingAI should behave...', cancel:'Cancel', save:'Save', language:'Language', madeBy:'MingAI | Made by NexuCore', justNow:'Just now', mAgo:'m ago', hAgo:'h ago', dAgo:'d ago', deleteTitle:'Delete chat', errorImg:'Error generating image. Please try again.', errorText:'Error contacting MingAI.', you:'You', suggestions:[{b:'Code',t:'Write a Python script for a web scraper',q:'Create a Python script for a simple web scraper'},{b:'Brainstorm',t:'Startup names for a tech company',q:'Help me brainstorm names for a tech startup'},{b:'Explain',t:'Quantum physics for a 5-year old',q:'Explain quantum physics like I am five years old'},{b:'Write',t:'Formal email about a promotion',q:'Write a formal email to my boss about a promotion'}] },
+    pirate: { newChat:'New voyage', recent:'Past voyages', placeholder:'Ask MingAI, ye scallywag...', imgPlaceholder:'Describe yer image, landlubber...', thinking:'MingAI be thinkin\'... YARR!', generating:'MingImage be conjurin\'...', genImg:'Drawin\' yer image, arrr...', search:'Pillage', onlineResearch:'Sail the Web', attachFile:'Attach yer scroll', capabilities:'Ship\'s Arsenal', yourChats:'Yer Logbook', settingsTitle:'Ship\'s Orders', theme:'Flag', lightMode:'Sunny Deck', aiBehavior:'Crew Orders / Cap\'n\'s Orders', aiBehaviorPlaceholder:'Tell MingAI how to sail, cap\'n...', cancel:'Abandon Ship', save:'Stow it', language:'Tongue', madeBy:'MingAI | Crafted by NexuCore, YARR!', justNow:'Just now, arrr', mAgo:' min ago, matey', hAgo:' hrs ago, arrr', dAgo:' days adrift', deleteTitle:'Plunder this chat', errorImg:'Blimey! Image failed. Try again, scallywag!', errorText:'Davy Jones took yer connection!', you:'Ye', suggestions:[{b:'Code',t:'Write a Python script, arrr',q:'Create a Python script for a simple web scraper'},{b:'Brainstorm',t:'Startup names, ye sea dog',q:'Help me brainstorm names for a tech startup'},{b:'Explain',t:'Quantum physics for a landlubber',q:'Explain quantum physics like I am five years old'},{b:'Write',t:'Formal scroll to me cap\'n',q:'Write a formal email to my boss about a promotion'}] },
+    de: { newChat:'Neuer Chat', recent:'Verlauf', placeholder:'Frag MingAI etwas...', imgPlaceholder:'Beschreibe ein Bild...', thinking:'MingAI denkt nach...', generating:'MingImage generiert...', genImg:'Bild wird generiert...', search:'Suche', onlineResearch:'Online-Recherche', attachFile:'Datei anhängen', capabilities:'Funktionen', yourChats:'Deine Chats', settingsTitle:'Einstellungen', theme:'Design', lightMode:'Helles Design', aiBehavior:'KI-Verhalten / Systemprompt', aiBehaviorPlaceholder:'Beschreibe, wie MingAI sich verhalten soll...', cancel:'Abbrechen', save:'Speichern', language:'Sprache', madeBy:'MingAI | Erstellt von NexuCore', justNow:'Gerade eben', mAgo:' Min.', hAgo:' Std.', dAgo:' T.', deleteTitle:'Chat löschen', errorImg:'Fehler beim Generieren. Bitte erneut versuchen.', errorText:'Fehler beim Verbinden mit MingAI.', you:'Du', suggestions:[{b:'Code',t:'Python-Skript für einen Web-Scraper',q:'Erstelle ein Python-Skript für einen einfachen Web-Scraper'},{b:'Brainstorming',t:'Namen für ein Tech-Startup',q:'Hilf mir, Namen für ein Tech-Startup zu finden'},{b:'Erklären',t:'Quantenphysik für 5-Jährige',q:'Erkläre Quantenphysik, als wäre ich fünf Jahre alt'},{b:'Schreiben',t:'Formelle E-Mail wegen Beförderung',q:'Schreibe eine formelle E-Mail an meinen Chef wegen einer Beförderung'}] },
+    fr: { newChat:'Nouveau chat', recent:'Récents', placeholder:'Pose une question à MingAI...', imgPlaceholder:'Décris une image à générer...', thinking:'MingAI réfléchit...', generating:'MingImage génère...', genImg:'Génération en cours...', search:'Recherche', onlineResearch:'Recherche en ligne', attachFile:'Joindre un fichier', capabilities:'Fonctionnalités', yourChats:'Vos chats', settingsTitle:'Paramètres', theme:'Thème', lightMode:'Mode clair', aiBehavior:'Comportement IA / Prompt système', aiBehaviorPlaceholder:"Décris comment MingAI doit se comporter...", cancel:'Annuler', save:'Enregistrer', language:'Langue', madeBy:'MingAI | Créé par NexuCore', justNow:"À l'instant", mAgo:' min', hAgo:' h', dAgo:' j', deleteTitle:'Supprimer le chat', errorImg:'Erreur de génération. Veuillez réessayer.', errorText:'Erreur de connexion à MingAI.', you:'Vous', suggestions:[{b:'Code',t:'Script Python pour un web scraper',q:'Crée un script Python pour un web scraper simple'},{b:'Brainstorm',t:'Noms pour une startup tech',q:'Aide-moi à trouver des noms pour une startup tech'},{b:'Expliquer',t:'La physique quantique pour un enfant de 5 ans',q:'Explique la physique quantique comme si j\'avais cinq ans'},{b:'Écrire',t:'Email formel pour une promotion',q:'Rédige un email formel à mon patron pour une promotion'}] },
+    es: { newChat:'Nuevo chat', recent:'Recientes', placeholder:'Pregúntale algo a MingAI...', imgPlaceholder:'Describe una imagen a generar...', thinking:'MingAI está pensando...', generating:'MingImage generando...', genImg:'Generando imagen...', search:'Buscar', onlineResearch:'Investigación online', attachFile:'Adjuntar archivo', capabilities:'Funciones', yourChats:'Tus chats', settingsTitle:'Configuración', theme:'Tema', lightMode:'Modo claro', aiBehavior:'Comportamiento IA / Prompt del sistema', aiBehaviorPlaceholder:'Describe cómo debe comportarse MingAI...', cancel:'Cancelar', save:'Guardar', language:'Idioma', madeBy:'MingAI | Creado por NexuCore', justNow:'Ahora mismo', mAgo:' min', hAgo:' h', dAgo:' d', deleteTitle:'Eliminar chat', errorImg:'Error al generar. Inténtalo de nuevo.', errorText:'Error al conectar con MingAI.', you:'Tú', suggestions:[{b:'Código',t:'Script Python para web scraper',q:'Crea un script Python para un web scraper simple'},{b:'Brainstorm',t:'Nombres para una startup tech',q:'Ayúdame a encontrar nombres para una startup tech'},{b:'Explicar',t:'Física cuántica para un niño de 5 años',q:'Explica la física cuántica como si tuviera cinco años'},{b:'Escribir',t:'Email formal sobre una promoción',q:'Escribe un email formal a mi jefe sobre una promoción'}] },
+    it: { newChat:'Nuova chat', recent:'Recenti', placeholder:'Chiedi qualcosa a MingAI...', imgPlaceholder:'Descrivi un immagine da generare...', thinking:'MingAI sta pensando...', generating:'MingImage sta generando...', genImg:'Generazione in corso...', search:'Cerca', onlineResearch:'Ricerca online', attachFile:'Allega file', capabilities:'Funzionalità', yourChats:'Le tue chat', settingsTitle:'Impostazioni', theme:'Tema', lightMode:'Modalità chiara', aiBehavior:'Comportamento IA / Prompt di sistema', aiBehaviorPlaceholder:'Descrivi come deve comportarsi MingAI...', cancel:'Annulla', save:'Salva', language:'Lingua', madeBy:'MingAI | Creato da NexuCore', justNow:'Proprio ora', mAgo:' min', hAgo:' h', dAgo:' g', deleteTitle:'Elimina chat', errorImg:'Errore nella generazione. Riprova.', errorText:'Errore di connessione a MingAI.', you:'Tu', suggestions:[{b:'Codice',t:'Script Python per web scraper',q:'Crea uno script Python per un web scraper semplice'},{b:'Brainstorm',t:'Nomi per una startup tech',q:'Aiutami a trovare nomi per una startup tech'},{b:'Spiegare',t:'La fisica quantistica per un bambino di 5 anni',q:'Spiega la fisica quantistica come se avessi cinque anni'},{b:'Scrivere',t:'Email formale per una promozione',q:'Scrivi una email formale al mio capo per una promozione'}] },
+    pt: { newChat:'Novo chat', recent:'Recentes', placeholder:'Pergunte algo ao MingAI...', imgPlaceholder:'Descreva uma imagem para gerar...', thinking:'MingAI está a pensar...', generating:'MingImage a gerar...', genImg:'Gerando imagem...', search:'Pesquisar', onlineResearch:'Pesquisa online', attachFile:'Anexar arquivo', capabilities:'Funcionalidades', yourChats:'Os seus chats', settingsTitle:'Definições', theme:'Tema', lightMode:'Modo claro', aiBehavior:'Comportamento IA / Prompt de sistema', aiBehaviorPlaceholder:'Descreva como o MingAI deve se comportar...', cancel:'Cancelar', save:'Guardar', language:'Idioma', madeBy:'MingAI | Criado pela NexuCore', justNow:'Agora mesmo', mAgo:' min', hAgo:' h', dAgo:' d', deleteTitle:'Apagar chat', errorImg:'Erro ao gerar. Tente novamente.', errorText:'Erro ao contactar MingAI.', you:'Você', suggestions:[{b:'Código',t:'Script Python para web scraper',q:'Crie um script Python para um web scraper simples'},{b:'Brainstorm',t:'Nomes para uma startup tech',q:'Ajude-me a encontrar nomes para uma startup tech'},{b:'Explicar',t:'Física quântica para uma criança de 5 anos',q:'Explique física quântica como se eu tivesse cinco anos'},{b:'Escrever',t:'Email formal sobre uma promoção',q:'Escreva um email formal ao meu chefe sobre uma promoção'}] },
+    nl: { newChat:'Nieuw gesprek', recent:'Recent', placeholder:'Stel MingAI een vraag...', imgPlaceholder:'Beschrijf een afbeelding...', thinking:'MingAI denkt na...', generating:'MingImage genereert...', genImg:'Afbeelding genereren...', search:'Zoeken', onlineResearch:'Online onderzoek', attachFile:'Bestand bijvoegen', capabilities:'Mogelijkheden', yourChats:'Jouw chats', settingsTitle:'Instellingen', theme:'Thema', lightMode:'Lichte modus', aiBehavior:'AI-gedrag / Systeemprompt', aiBehaviorPlaceholder:'Beschrijf hoe MingAI zich moet gedragen...', cancel:'Annuleren', save:'Opslaan', language:'Taal', madeBy:'MingAI | Gemaakt door NexuCore', justNow:'Zojuist', mAgo:' min', hAgo:' u', dAgo:' d', deleteTitle:'Chat verwijderen', errorImg:'Fout bij genereren. Probeer opnieuw.', errorText:'Fout bij verbinden met MingAI.', you:'Jij', suggestions:[{b:'Code',t:'Python-script voor een web scraper',q:'Maak een Python-script voor een eenvoudige web scraper'},{b:'Brainstorm',t:'Namen voor een tech-startup',q:'Help me namen bedenken voor een tech-startup'},{b:'Uitleggen',t:'Kwantumfysica voor een 5-jarige',q:'Leg kwantumfysica uit alsof ik vijf jaar oud ben'},{b:'Schrijven',t:'Formele e-mail over een promotie',q:'Schrijf een formele e-mail aan mijn baas over een promotie'}] },
+    pl: { newChat:'Nowy czat', recent:'Ostatnie', placeholder:'Zapytaj MingAI o cokolwiek...', imgPlaceholder:'Opisz obraz do wygenerowania...', thinking:'MingAI myśli...', generating:'MingImage generuje...', genImg:'Generowanie obrazu...', search:'Szukaj', onlineResearch:'Wyszukiwanie online', attachFile:'Załącz plik', capabilities:'Możliwości', yourChats:'Twoje czaty', settingsTitle:'Ustawienia', theme:'Motyw', lightMode:'Tryb jasny', aiBehavior:'Zachowanie AI / Prompt systemowy', aiBehaviorPlaceholder:'Opisz jak MingAI ma się zachowywać...', cancel:'Anuluj', save:'Zapisz', language:'Język', madeBy:'MingAI | Stworzone przez NexuCore', justNow:'Przed chwilą', mAgo:' min', hAgo:' godz.', dAgo:' dni', deleteTitle:'Usuń czat', errorImg:'Błąd generowania. Spróbuj ponownie.', errorText:'Błąd połączenia z MingAI.', you:'Ty', suggestions:[{b:'Kod',t:'Skrypt Python do web scrapera',q:'Stwórz skrypt Python dla prostego web scrapera'},{b:'Burza mózgów',t:'Nazwy dla startupu tech',q:'Pomóż mi wymyślić nazwy dla startupu technologicznego'},{b:'Wyjaśnij',t:'Fizyka kwantowa dla 5-latka',q:'Wyjaśnij fizykę kwantową jak dla pięciolatka'},{b:'Napisz',t:'Formalny e-mail w sprawie awansu',q:'Napisz formalny e-mail do szefa w sprawie awansu'}] },
+    ru: { newChat:'Новый чат', recent:'Недавние', placeholder:'Спроси MingAI что угодно...', imgPlaceholder:'Опиши изображение для генерации...', thinking:'MingAI думает...', generating:'MingImage генерирует...', genImg:'Генерация изображения...', search:'Поиск', onlineResearch:'Онлайн-поиск', attachFile:'Прикрепить файл', capabilities:'Возможности', yourChats:'Ваши чаты', settingsTitle:'Настройки', theme:'Тема', lightMode:'Светлая тема', aiBehavior:'Поведение ИИ / Системный промпт', aiBehaviorPlaceholder:'Опишите, как должен вести себя MingAI...', cancel:'Отмена', save:'Сохранить', language:'Язык', madeBy:'MingAI | Создано NexuCore', justNow:'Только что', mAgo:' мин', hAgo:' ч', dAgo:' д', deleteTitle:'Удалить чат', errorImg:'Ошибка генерации. Попробуйте снова.', errorText:'Ошибка подключения к MingAI.', you:'Вы', suggestions:[{b:'Код',t:'Python-скрипт для парсинга сайтов',q:'Создай Python-скрипт для простого веб-скрапера'},{b:'Брейншторм',t:'Названия для tech-стартапа',q:'Помоги придумать названия для технологического стартапа'},{b:'Объяснить',t:'Квантовая физика для 5-летнего',q:'Объясни квантовую физику, как будто мне пять лет'},{b:'Написать',t:'Официальное письмо о повышении',q:'Напиши официальное письмо боссу о повышении'}] },
+    zh: { newChat:'新对话', recent:'最近', placeholder:'问问 MingAI...', imgPlaceholder:'描述要生成的图片...', thinking:'MingAI 正在思考...', generating:'MingImage 生成中...', genImg:'正在生成图片...', search:'搜索', onlineResearch:'在线搜索', attachFile:'附加文件', capabilities:'功能', yourChats:'你的对话', settingsTitle:'设置', theme:'主题', lightMode:'浅色模式', aiBehavior:'AI 行为 / 系统提示', aiBehaviorPlaceholder:'描述 MingAI 的行为方式...', cancel:'取消', save:'保存', language:'语言', madeBy:'MingAI | 由 NexuCore 制作', justNow:'刚刚', mAgo:'分钟前', hAgo:'小时前', dAgo:'天前', deleteTitle:'删除对话', errorImg:'生成出错，请重试。', errorText:'连接 MingAI 出错。', you:'你', suggestions:[{b:'代码',t:'编写 Python 网络爬虫脚本',q:'创建一个简单的 Python 网络爬虫脚本'},{b:'头脑风暴',t:'为科技初创公司取名',q:'帮我为科技初创公司头脑风暴名字'},{b:'解释',t:'给5岁孩子讲量子物理',q:'像我五岁一样解释量子物理'},{b:'写作',t:'关于晋升的正式邮件',q:'写一封关于晋升的正式邮件给我的老板'}] },
+    ja: { newChat:'新しいチャット', recent:'最近', placeholder:'MingAI に何でも聞いて...', imgPlaceholder:'生成する画像を説明して...', thinking:'MingAI が考えています...', generating:'MingImage が生成中...', genImg:'画像を生成中...', search:'検索', onlineResearch:'オンライン調査', attachFile:'ファイルを添付', capabilities:'機能', yourChats:'チャット履歴', settingsTitle:'設定', theme:'テーマ', lightMode:'ライトモード', aiBehavior:'AI の動作 / システムプロンプト', aiBehaviorPlaceholder:'MingAI の動作を説明してください...', cancel:'キャンセル', save:'保存', language:'言語', madeBy:'MingAI | NexuCore 製作', justNow:'たった今', mAgo:'分前', hAgo:'時間前', dAgo:'日前', deleteTitle:'チャットを削除', errorImg:'生成エラー。再試行してください。', errorText:'MingAI への接続エラー。', you:'あなた', suggestions:[{b:'コード',t:'Webスクレイパーのアスクリプト作成',q:'シンプルなWebスクレイパーのPythonスクリプトを作成して'},{b:'ブレスト',t:'テックスタートアップの社名候補',q:'テックスタートアップの名前をブレインストーミングして'},{b:'説明',t:'5歳向けの量子物理学',q:'5歳の子供に量子物理学を説明して'},{b:'ライティング',t:'昇進についての正式なメール',q:'上司への昇進についての正式なメールを書いて'}] },
+    ko: { newChat:'새 채팅', recent:'최근', placeholder:'MingAI에게 무엇이든 물어보세요...', imgPlaceholder:'생성할 이미지를 설명하세요...', thinking:'MingAI가 생각 중...', generating:'MingImage 생성 중...', genImg:'이미지 생성 중...', search:'검색', onlineResearch:'온라인 검색', attachFile:'파일 첨부', capabilities:'기능', yourChats:'내 채팅', settingsTitle:'설정', theme:'테마', lightMode:'라이트 모드', aiBehavior:'AI 동작 / 시스템 프롬프트', aiBehaviorPlaceholder:'MingAI의 동작 방식을 설명하세요...', cancel:'취소', save:'저장', language:'언어', madeBy:'MingAI | NexuCore 제작', justNow:'방금 전', mAgo:'분 전', hAgo:'시간 전', dAgo:'일 전', deleteTitle:'채팅 삭제', errorImg:'생성 오류. 다시 시도하세요.', errorText:'MingAI 연결 오류.', you:'나', suggestions:[{b:'코드',t:'웹 스크래퍼 Python 스크립트',q:'간단한 웹 스크래퍼 Python 스크립트 만들기'},{b:'브레인스토밍',t:'기술 스타트업 이름 아이디어',q:'기술 스타트업 이름 브레인스토밍 도와줘'},{b:'설명',t:'5살도 이해하는 양자물리학',q:'다섯 살짜리에게 양자물리학 설명해줘'},{b:'작성',t:'승진 관련 공식 이메일',q:'상사에게 승진에 관한 공식 이메일 작성해줘'}] },
+    ar: { newChat:'محادثة جديدة', recent:'الأخيرة', placeholder:'اسأل MingAI أي شيء...', imgPlaceholder:'صف صورة لتوليدها...', thinking:'MingAI يفكر...', generating:'MingImage يولّد...', genImg:'جارٍ توليد الصورة...', search:'بحث', onlineResearch:'بحث عبر الإنترنت', attachFile:'إرفاق ملف', capabilities:'الإمكانيات', yourChats:'محادثاتك', settingsTitle:'الإعدادات', theme:'السمة', lightMode:'الوضع الفاتح', aiBehavior:'سلوك الذكاء الاصطناعي / موجّه النظام', aiBehaviorPlaceholder:'صف كيف يجب أن يتصرف MingAI...', cancel:'إلغاء', save:'حفظ', language:'اللغة', madeBy:'MingAI | صُنع بواسطة NexuCore', justNow:'الآن', mAgo:' د', hAgo:' س', dAgo:' ي', deleteTitle:'حذف المحادثة', errorImg:'خطأ في التوليد. حاول مجدداً.', errorText:'خطأ في الاتصال بـ MingAI.', you:'أنت', suggestions:[{b:'كود',t:'سكريبت Python لجلب البيانات',q:'أنشئ سكريبت Python لجلب البيانات من الويب'},{b:'عصف ذهني',t:'أسماء لشركة تقنية ناشئة',q:'ساعدني في إيجاد أسماء لشركة تقنية ناشئة'},{b:'شرح',t:'فيزياء الكم لطفل عمره 5 سنوات',q:'اشرح فيزياء الكم كأنني في الخامسة من عمري'},{b:'كتابة',t:'بريد رسمي عن ترقية',q:'اكتب بريداً رسمياً لمديري عن ترقية'}] },
+    hi: { newChat:'नई चैट', recent:'हाल की', placeholder:'MingAI से कुछ भी पूछें...', imgPlaceholder:'एक छवि का वर्णन करें...', thinking:'MingAI सोच रहा है...', generating:'MingImage बना रहा है...', genImg:'छवि बनाई जा रही है...', search:'खोजें', onlineResearch:'ऑनलाइन खोज', attachFile:'फ़ाइल संलग्न करें', capabilities:'क्षमताएं', yourChats:'आपकी चैट', settingsTitle:'सेटिंग्स', theme:'थीम', lightMode:'लाइट मोड', aiBehavior:'AI व्यवहार / सिस्टम प्रॉम्प्ट', aiBehaviorPlaceholder:'MingAI का व्यवहार कैसा होना चाहिए...', cancel:'रद्द करें', save:'सहेजें', language:'भाषा', madeBy:'MingAI | NexuCore द्वारा बनाया गया', justNow:'अभी', mAgo:' मि', hAgo:' घं', dAgo:' दि', deleteTitle:'चैट हटाएं', errorImg:'छवि बनाने में त्रुटि। पुनः प्रयास करें।', errorText:'MingAI से कनेक्ट करने में त्रुटि।', you:'आप', suggestions:[{b:'कोड',t:'वेब स्क्रेपर के लिए Python स्क्रिप्ट',q:'एक सरल वेब स्क्रेपर के लिए Python स्क्रिप्ट बनाएं'},{b:'ब्रेनस्टॉर्म',t:'टेक स्टार्टअप के लिए नाम',q:'एक टेक स्टार्टअप के लिए नाम सोचने में मदद करें'},{b:'समझाएं',t:'5 साल के बच्चे को क्वांटम भौतिकी',q:'क्वांटम भौतिकी को ऐसे समझाएं जैसे मैं पाँच साल का हूँ'},{b:'लिखें',t:'प्रमोशन के बारे में औपचारिक ईमेल',q:'बॉस को प्रमोशन के बारे में औपचारिक ईमेल लिखें'}] },
+    tr: { newChat:'Yeni sohbet', recent:'Son', placeholder:'MingAI\'ye bir şey sor...', imgPlaceholder:'Oluşturulacak bir görsel tarif et...', thinking:'MingAI düşünüyor...', generating:'MingImage oluşturuyor...', genImg:'Görsel oluşturuluyor...', search:'Ara', onlineResearch:'Çevrimiçi araştırma', attachFile:'Dosya ekle', capabilities:'Özellikler', yourChats:'Sohbetlerin', settingsTitle:'Ayarlar', theme:'Tema', lightMode:'Açık mod', aiBehavior:'AI Davranışı / Sistem Komutu', aiBehaviorPlaceholder:'MingAI\'nin nasıl davranması gerektiğini açıkla...', cancel:'İptal', save:'Kaydet', language:'Dil', madeBy:'MingAI | NexuCore tarafından yapıldı', justNow:'Az önce', mAgo:' dk', hAgo:' sa', dAgo:' g', deleteTitle:'Sohbeti sil', errorImg:'Oluşturma hatası. Tekrar deneyin.', errorText:'MingAI\'ye bağlanma hatası.', you:'Sen', suggestions:[{b:'Kod',t:'Web scraper için Python scripti',q:'Basit bir web scraper için Python scripti oluştur'},{b:'Beyin Fırtınası',t:'Teknoloji girişimi için isimler',q:'Bir teknoloji girişimi için isim bulmama yardım et'},{b:'Açıkla',t:'5 yaşındaki için kuantum fiziği',q:'Kuantum fiziğini beş yaşındaymışım gibi anlat'},{b:'Yaz',t:'Terfi hakkında resmi e-posta',q:'Patronuma terfi hakkında resmi bir e-posta yaz'}] },
+    id: { newChat:'Chat baru', recent:'Terbaru', placeholder:'Tanya MingAI apa saja...', imgPlaceholder:'Gambarkan citra yang ingin dibuat...', thinking:'MingAI sedang berpikir...', generating:'MingImage sedang membuat...', genImg:'Membuat gambar...', search:'Cari', onlineResearch:'Riset online', attachFile:'Lampirkan file', capabilities:'Fitur', yourChats:'Chat kamu', settingsTitle:'Pengaturan', theme:'Tema', lightMode:'Mode terang', aiBehavior:'Perilaku AI / System Prompt', aiBehaviorPlaceholder:'Jelaskan bagaimana MingAI harus berperilaku...', cancel:'Batal', save:'Simpan', language:'Bahasa', madeBy:'MingAI | Dibuat oleh NexuCore', justNow:'Baru saja', mAgo:' mnt', hAgo:' jam', dAgo:' hr', deleteTitle:'Hapus chat', errorImg:'Gagal membuat gambar. Coba lagi.', errorText:'Gagal terhubung ke MingAI.', you:'Kamu', suggestions:[{b:'Kode',t:'Skrip Python untuk web scraper',q:'Buat skrip Python untuk web scraper sederhana'},{b:'Brainstorm',t:'Nama untuk startup teknologi',q:'Bantu aku brainstorm nama untuk startup teknologi'},{b:'Jelaskan',t:'Fisika kuantum untuk anak 5 tahun',q:'Jelaskan fisika kuantum seolah aku berumur lima tahun'},{b:'Tulis',t:'Email formal tentang promosi',q:'Tulis email formal ke bossku tentang promosi'}] },
+};
+
+function _applyLanguage(lang) { var s = _UI_STRINGS[lang] || _UI_STRINGS['en']; var rtl = lang === 'ar'; document.body.setAttribute('dir', rtl ? 'rtl' : 'ltr'); var brandName = document.querySelector('.sidebar-brand-name'); if (brandName) brandName.textContent = s.yourChats; var newChatBtn = document.querySelector('.new-chat-btn'); if (newChatBtn) newChatBtn.childNodes[newChatBtn.childNodes.length - 1].textContent = ' ' + s.newChat; var historyLabel = document.querySelector('.history-label'); if (historyLabel) historyLabel.textContent = s.recent; var inp = document.getElementById('user-input'); if (inp) inp.placeholder = _currentModel === 'image' ? s.imgPlaceholder : s.placeholder; var typing = document.getElementById('typing'); if (typing && typing.textContent.trim() !== '') typing.textContent = s.thinking; var footer = document.querySelector('.footer-area p'); if (footer) footer.textContent = s.madeBy; var settingsLabels = document.querySelectorAll('.settings-row > label'); if (settingsLabels[0]) settingsLabels[0].textContent = s.theme; if (settingsLabels[1]) settingsLabels[1].textContent = s.aiBehavior; if (settingsLabels[2]) settingsLabels[2].textContent = s.language; var lightModeSpan = document.querySelector('.theme-toggle-row span'); if (lightModeSpan) lightModeSpan.textContent = s.lightMode; var sysPropmt = document.getElementById('settings-system-prompt'); if (sysPropmt) sysPropmt.placeholder = s.aiBehaviorPlaceholder; var cancelBtn = document.querySelector('.btn-cancel'); if (cancelBtn) cancelBtn.textContent = s.cancel; var saveBtn = document.querySelector('.btn-save'); if (saveBtn) saveBtn.textContent = s.save; var settingsH2 = document.querySelector('.settings-modal h2'); if (settingsH2) { var svg = settingsH2.querySelector('svg'); settingsH2.textContent = ' ' + s.settingsTitle; if (svg) settingsH2.prepend(svg); } var capLabel = document.querySelector('#plus-popup div:first-child'); if (capLabel) capLabel.textContent = s.capabilities; var onlineLabel = document.querySelector('#plus-popup .theme-toggle-row span, #plus-popup label span[style]'); var onlineSpans = document.querySelectorAll('#plus-popup span'); onlineSpans.forEach(function(sp){ if(sp.style && sp.style.fontSize === '13px' && sp.closest('label')) sp.textContent = s.onlineResearch; if(sp.style && sp.style.fontSize === '13px' && !sp.closest('label')) sp.textContent = s.attachFile; }); document.querySelector('.subtitle').textContent = lang === 'en' ? 'How can I help you be productive today?' : s.placeholder.replace('...','') + '?'; var grid = document.querySelector('.suggestion-grid'); if (grid && s.suggestions) { grid.innerHTML = ''; s.suggestions.forEach(function(sg) { var card = document.createElement('div'); card.className = 'suggestion-card'; card.innerHTML = '<b>' + sg.b + '</b><br>' + sg.t; card.onclick = function() { quickFill(sg.q); }; grid.appendChild(card); }); } }
+function _getCurrentLang() { return localStorage.getItem('mingai_language') || 'en'; }
+window._getCurrentLang = _getCurrentLang;
+window.openSettings = _001_0O0O;
+var _orig__l_01_1l = window.saveSettings;
+window.saveSettings = function() { var lang = document.getElementById('settings-language').value; localStorage.setItem('mingai_language', lang); _applyLanguage(lang); _orig__l_01_1l && _orig__l_01_1l(); };
+
+(function() { if (!localStorage.getItem('mingai_language')) { var _bl = (navigator.language || navigator.userLanguage || 'en').toLowerCase().split('-')[0]; var _supported = ['en','de','fr','es','it','pt','nl','pl','ru','zh','ja','ko','ar','hi','tr','id','pirate']; localStorage.setItem('mingai_language', _supported.indexOf(_bl) > -1 ? _bl : 'en'); } })(); _applyLanguage(_getCurrentLang());
+_01Oll11I();
+})();
+function togglePlusPopup(e) { e.stopPropagation(); var p = document.getElementById('plus-popup'); p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
+document.addEventListener('click', function(e) { var p = document.getElementById('plus-popup'); var btn = document.getElementById('plus-btn'); if (!p.contains(e.target) && e.target !== btn) { p.style.display = 'none'; } });
+
+function updateCapabilityBadges() { var badges = document.getElementById('capability-badges'); badges.innerHTML = ''; if (document.getElementById('toggle-search').checked) { badges.innerHTML += '<span style="display:inline-flex; align-items:center; gap:4px; font-size:11px; background:rgba(129,140,248,0.15); color:var(--accent); border:1px solid rgba(129,140,248,0.3); border-radius:20px; padding:3px 10px; font-weight:600; white-space:nowrap;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>' + ((_UI_STRINGS[_getCurrentLang()] || _UI_STRINGS['en']).search || 'Search') + '</span>'; } }
+var _attachedFiles = [];
+
+function handleFileUpload(event) { var files = Array.from(event.target.files); files.forEach(function(file) { var reader = new FileReader(); reader.onload = function(e) { var content = e.target.result; var existing = _attachedFiles.findIndex(function(f){ return f.name === file.name; }); if (existing > -1) _attachedFiles.splice(existing, 1); var isImage = file.type.startsWith('image/'); _attachedFiles.push({ name: file.name, content: content, type: file.type, isImage: isImage }); renderAttachedFilesBar(); }; if (file.type === 'application/pdf' || file.type.startsWith('image/')) { reader.readAsDataURL(file); } else { reader.readAsText(file); } }); event.target.value = ''; }
+function renderAttachedFilesBar() { var bar = document.getElementById('attached-files-bar'); if (_attachedFiles.length === 0) { bar.style.display = 'none'; bar.innerHTML = ''; return; } bar.style.display = 'flex'; bar.innerHTML = ''; _attachedFiles.forEach(function(f, i) { var chip = document.createElement('div'); chip.className = 'attached-file-chip'; if (f.isImage) { chip.style.cssText = 'position:relative; padding:0; border-radius:10px; overflow:hidden; background:none; border:1px solid rgba(129,140,248,0.4); width:56px; height:56px; flex-shrink:0;'; chip.innerHTML = '<img src="' + f.content + '" style="width:56px;height:56px;object-fit:cover;display:block;border-radius:9px;" title="' + f.name + '"><button onclick="removeAttachedFile(' + i + ')" title="Remove" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.6);border:none;color:white;cursor:pointer;border-radius:50%;width:16px;height:16px;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;">×</button>'; } else { chip.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span title="' + f.name + '">' + f.name + '</span><button onclick="removeAttachedFile(' + i + ')" title="Remove">×</button>'; } bar.appendChild(chip); }); }
+function removeAttachedFile(index) { _attachedFiles.splice(index, 1); renderAttachedFilesBar(); }
+function buildFileContext() { if (_attachedFiles.length === 0) return ''; var ctx = '\n\n--- Attached Files ---\n'; _attachedFiles.forEach(function(f) { if (!f.isImage) { var preview = f.content.length > 80000 ? f.content.substring(0, 80000) + '\n...[truncated]' : f.content; ctx += '\n[File: ' + f.name + ']\n' + preview + '\n[End of ' + f.name + ']\n'; } }); ctx += '--- End of Attached Files ---'; return ctx; }
+async function analyzeImagesWithGemini(files, userText) { var imageFiles = files.filter(function(f){ return f.isImage; }); if (imageFiles.length === 0) return ''; var results = ''; for (var i = 0; i < imageFiles.length; i++) { var f = imageFiles[i]; try { var base64 = f.content.split(',')[1]; var mimeType = f.type || 'image/jpeg'; var prompt = userText ? 'The user says: "' + userText + '". Analyze this image in detail and describe everything relevant to what the user is asking. Be thorough.' : 'Analyze this image in full detail. Describe what you see, including objects, people, colors, text, context, mood, and any other relevant details.'; var body = { model: 'gemini-flash', messages: [{ role: 'user', content: [ { type: 'text', text: prompt }, { type: 'image_url', image_url: { url: 'data:' + mimeType + ';base64,' + base64 } } ] }] }; var res = await fetch('https://enter.pollinations.ai/openai', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer sk_bAAnKJowf3NPqYSBbEIKea50K0TOTBWp' }, body: JSON.stringify(body) }); var data = await res.json(); var description = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) ? data.choices[0].message.content : 'Could not analyze image.'; results += '\n[Image: ' + f.name + ']\n' + description + '\n[End of ' + f.name + ']\n'; } catch(e) { results += '\n[Image: ' + f.name + ']\nImage attached but could not be analyzed.\n[End of ' + f.name + ']\n'; } } return results ? '\n\n--- Attached Images (analyzed by vision AI) ---\n' + results + '--- End of Images ---' : ''; }
+async function doWebSearch(query) { try { var sRes = await fetch('https://corsproxy.io/?https://api.tavily.com/search', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ api_key: _TKEY, query: query, max_results: 5 }) }); var sData = await sRes.json(); if (sData.results && sData.results.length > 0) { return '\n\nCurrent web search results (today: ' + new Date().toDateString() + '):\n' + sData.results.map(function(r){ return '- ' + r.title + ': ' + r.content; }).join('\n'); } } catch(e) {} return ''; }
+
+</script>
+</body>
+</html>
