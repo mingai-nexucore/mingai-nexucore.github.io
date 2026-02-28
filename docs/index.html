@@ -603,6 +603,8 @@
             <a class="sidebar-link" href="#features"><span class="dot"></span>Chat Interface</a>
             <a class="sidebar-link" href="#image-gen"><span class="dot"></span>Image Generation</a>
             <a class="sidebar-link" href="#file-attach"><span class="dot"></span>File Attachments</a>
+            <a class="sidebar-link" href="#image-vision"><span class="dot"></span>Image Vision</a>
+            <a class="sidebar-link" href="#tts"><span class="dot"></span>Text-to-Speech</a>
             <a class="sidebar-link" href="#web-search"><span class="dot"></span>Web Search</a>
             <a class="sidebar-link" href="#customization"><span class="dot"></span>Customization</a>
         </div>
@@ -622,7 +624,7 @@
             <h1 class="hero-title-big"><span>MingAI</span> Docs</h1>
             <p class="section-lead">Everything you need to understand, use, and build with MingAI — the AI assistant built by NexuCore. From the chat app to the API (coming soon), it's all here.</p>
             <div class="chip-row">
-                <span class="chip accent">⚡ MingAI 2.1</span>
+                <span class="chip accent">⚡ MingAI 2.4</span>
                 <span class="chip accent">🎨 MingImage 1.3</span>
                 <span class="chip warn">🔧 API – Work in Progress</span>
                 <span class="chip">🌐 17 Languages</span>
@@ -641,8 +643,8 @@
             <div class="model-grid">
                 <div class="model-card">
                     <div class="model-card-icon">💬</div>
-                    <div class="model-card-name">MingAI 2.1</div>
-                    <p class="model-card-desc">The main conversational model. Handles coding, writing, reasoning, research, file analysis, and general-purpose tasks. Supports streaming responses and full markdown output.</p>
+                    <div class="model-card-name">MingAI 2.4</div>
+                    <p class="model-card-desc">The main conversational model. Handles coding, writing, reasoning, research, file analysis, image vision, and general-purpose tasks. Supports streaming responses and full markdown output.</p>
                 </div>
                 <div class="model-card">
                     <div class="model-card-icon">🎨</div>
@@ -653,7 +655,7 @@
 
             <div class="info-box">
                 <span class="info-icon">ℹ️</span>
-                <p>You can switch between models in the app using the model selector tabs just above the input field — <strong style="color: var(--text);">MingAI 2.1</strong> for chat, <strong style="color: var(--text);">MingImage 1.3</strong> for image generation.</p>
+                <p>You can switch between models in the app using the model selector tabs just above the input field — <strong style="color: var(--text);">MingAI 2.4</strong> for chat, <strong style="color: var(--text);">MingImage 1.3</strong> for image generation.</p>
             </div>
         </div>
 
@@ -678,7 +680,7 @@
             </div>
 
             <h3>2. Choose a Model</h3>
-            <p>Use the model tabs above the input field. Select <code>MingAI 2.1</code> for text conversations or <code>MingImage 1.3</code> to generate images from text descriptions.</p>
+            <p>Use the model tabs above the input field. Select <code>MingAI 2.4</code> for text conversations or <code>MingImage 1.3</code> to generate images from text descriptions.</p>
 
             <h3>3. Type your prompt</h3>
             <p>Type anything in the input box and press <kbd style="background:var(--card); border:1px solid var(--border); padding:2px 8px; border-radius:5px; font-size:0.82em; font-family:'DM Mono',monospace;">Enter</kbd> to send. Use <kbd style="background:var(--card); border:1px solid var(--border); padding:2px 8px; border-radius:5px; font-size:0.82em; font-family:'DM Mono',monospace;">Shift+Enter</kbd> for a new line.</p>
@@ -978,6 +980,43 @@ warm orange and red tones, soft brushstrokes</span></pre>
             <p>File contents are included directly in the message context. For large files, content is automatically truncated at 80,000 characters. You can attach multiple files at once.</p>
         </div>
 
+        <!-- IMAGE VISION -->
+        <div class="doc-section" id="image-vision">
+            <h2 class="section-title">Image Vision</h2>
+            <p>MingAI 2.4 can analyze images you attach to your messages. Click the <code>⊕</code> button, select <strong style="color:var(--text);">Attach File</strong>, and choose an image file. MingAI will examine the image and respond to your question about it as if it can see it directly.</p>
+
+            <h3>Supported Image Types</h3>
+            <div class="chip-row">
+                <span class="chip">.png</span>
+                <span class="chip">.jpg / .jpeg</span>
+                <span class="chip">.gif</span>
+                <span class="chip">.webp</span>
+                <span class="chip">.bmp</span>
+            </div>
+
+            <h3>How to Use</h3>
+            <p>Attach an image and ask anything about it — <em style="color:var(--text-muted);">"What's in this image?"</em>, <em style="color:var(--text-muted);">"Describe this diagram"</em>, <em style="color:var(--text-muted);">"What does this chart show?"</em>, or <em style="color:var(--text-muted);">"Is there any text in this image?"</em>. MingAI will analyze the full visual content and respond in detail.</p>
+
+            <div class="info-box">
+                <span class="info-icon">👁️</span>
+                <p>Image analysis happens automatically when you send a message with an attached image. A thumbnail preview is shown in both the input bar and the chat bubble for reference.</p>
+            </div>
+        </div>
+
+        <!-- TTS -->
+        <div class="doc-section" id="tts">
+            <h2 class="section-title">Text-to-Speech</h2>
+            <p>Every AI response includes a <strong style="color:var(--text);">🔊 read-aloud button</strong> below the message. Click it to have MingAI's response spoken aloud in your browser. Click it again to stop playback at any time.</p>
+
+            <h3>Automatic Language Detection</h3>
+            <p>TTS automatically detects the language of the AI's response and reads it back in the correct language — no configuration needed. Detection is based on script recognition (for Arabic, Japanese, Korean, Chinese, Cyrillic, etc.) and word-frequency scoring for Latin-script languages like French, German, Spanish, Italian, and more.</p>
+
+            <div class="info-box">
+                <span class="info-icon">🔊</span>
+                <p>Text-to-Speech uses your browser's built-in <strong style="color:var(--accent);">Web Speech API</strong>. Voice availability and quality may vary depending on your browser and operating system. Works best in Chrome and Edge.</p>
+            </div>
+        </div>
+
         <!-- WEB SEARCH -->
         <div class="doc-section" id="web-search">
             <h2 class="section-title">Online Web Search</h2>
@@ -1044,6 +1083,12 @@ warm orange and red tones, soft brushstrokes</span></pre>
 
             <h3>What is MingAI built on?</h3>
             <p>MingAI is built by NexuCore. The underlying model and infrastructure are proprietary to NexuCore. MingAI will never disclose or reference any third-party AI providers or technologies.</p>
+
+            <h3>Is MingAI free to use?</h3>
+            <p>Yes. The MingAI web app is completely free. No account, no credit card, no sign-up required.</p>
+
+            <h3>Can MingAI see and understand images?</h3>
+            <p>Yes. MingAI 2.4 supports image vision. Attach any image to your message and MingAI will analyze its contents and answer questions about it. Supported formats include PNG, JPG, GIF, WEBP, and BMP.</p>
 
             <h3>When will the API be available?</h3>
             <p>The MingAI API is currently a work in progress. There is no official release date yet. If you're interested in early access or want to be notified at launch, contact <strong style="color:var(--accent);">ming.nexucore@gmail.com</strong>.</p>
