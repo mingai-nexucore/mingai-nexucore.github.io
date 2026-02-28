@@ -1,1 +1,1110 @@
-Still in progress ;)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MingAI – Docs</title>
+    <link rel="icon" type="image/x-icon" href="https://mingai-nexucore.github.io/assets/logo.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0d0e;
+            --card: #1a1a1c;
+            --accent: #818cf8;
+            --accent-dim: rgba(129,140,248,0.15);
+            --accent-glow: rgba(129,140,248,0.3);
+            --text: #ececec;
+            --text-muted: #71717a;
+            --border: #1f1f22;
+            --code-bg: #080809;
+            --warning: #fbbf24;
+            --warning-dim: rgba(251,191,36,0.12);
+            --green: #34d399;
+            --green-dim: rgba(52,211,153,0.12);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Noise overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.5;
+        }
+
+        /* Ambient glows */
+        .ambient { position: fixed; pointer-events: none; z-index: 0; border-radius: 50%; filter: blur(120px); }
+        .ambient-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%); top: -200px; left: -200px; }
+        .ambient-2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(129,140,248,0.07) 0%, transparent 70%); bottom: 0; right: -100px; }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 0 40px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(13,13,14,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(31,31,34,0.7);
+        }
+
+        .nav-left { display: flex; align-items: center; gap: 10px; }
+
+        .nav-logo {
+            font-family: sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            background: var(--accent-dim);
+            border: 1px solid rgba(129,140,248,0.25);
+            color: var(--accent);
+            padding: 3px 10px;
+            border-radius: 999px;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links { display: flex; gap: 6px; list-style: none; }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            padding: 7px 13px;
+            border-radius: 8px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .nav-links a:hover { color: var(--text); background: var(--card); }
+        .nav-links a.active { color: var(--accent); }
+
+        .nav-cta {
+            background: var(--accent);
+            color: #fff !important;
+            font-weight: 600 !important;
+            padding: 8px 18px !important;
+            border-radius: 9px !important;
+        }
+        .nav-cta:hover { opacity: 0.88 !important; background: var(--accent) !important; }
+
+        /* LAYOUT */
+        .page-wrapper {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 68px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 68px;
+            height: calc(100vh - 68px);
+            overflow-y: auto;
+            padding: 32px 20px 32px 0;
+            scrollbar-width: thin;
+            scrollbar-color: #2a2a2e transparent;
+        }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: #2a2a2e; border-radius: 4px; }
+
+        .sidebar-section { margin-bottom: 28px; }
+        .sidebar-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 0 12px;
+            margin-bottom: 6px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+        .sidebar-link:hover { background: var(--card); color: var(--text); }
+        .sidebar-link.active { background: var(--accent-dim); color: var(--accent); border-left: 2px solid var(--accent); padding-left: 10px; }
+        .sidebar-link .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.5; flex-shrink: 0; }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            padding: 48px 0 120px 48px;
+            border-left: 1px solid var(--border);
+        }
+
+        /* SECTION */
+.doc-section {
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    scroll-margin-top: 88px;
+}
+        .doc-section.visible { opacity: 1; transform: none; }
+
+        .section-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+
+        .section-lead {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            max-width: 680px;
+            margin-bottom: 36px;
+        }
+
+        h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            margin-top: 8px;
+            color: var(--text);
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: #a1a1aa;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        /* WIP BANNER */
+        .wip-banner {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: var(--warning-dim);
+            border: 1px solid rgba(251,191,36,0.3);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 32px;
+        }
+        .wip-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .wip-banner-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--warning);
+            margin-bottom: 4px;
+        }
+        .wip-banner-text {
+            font-size: 0.88rem;
+            color: #a1a1aa;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* INFO BOX */
+        .info-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(129,140,248,0.25);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+        }
+        .info-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+        .info-box p { font-size: 0.88rem; color: #a1a1aa; line-height: 1.7; margin: 0; }
+
+        /* SUCCESS BOX */
+        .success-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: var(--green-dim);
+            border: 1px solid rgba(52,211,153,0.25);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+        }
+        .success-box p { font-size: 0.88rem; color: #a1a1aa; line-height: 1.7; margin: 0; }
+
+        /* CODE BLOCKS */
+        .code-block {
+            position: relative;
+            background: var(--code-bg);
+            border: 1px solid #27272a;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: #0f0f10;
+            border-bottom: 1px solid #1a1a1c;
+        }
+
+        .code-lang {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+        }
+
+        .code-copy {
+            background: transparent;
+            border: 1px solid #2a2a2e;
+            color: var(--text-muted);
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .code-copy:hover { color: var(--accent); border-color: var(--accent); }
+
+        pre {
+            margin: 0;
+            padding: 20px;
+            overflow-x: auto;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+        }
+
+        .kw  { color: #ff7b72; }
+        .fn  { color: #d2a8ff; }
+        .str { color: #a5d6ff; }
+        .num { color: #79c0ff; }
+        .cm  { color: #6e7681; }
+        .key { color: #ffa657; }
+        .val { color: #a5d6ff; }
+        .pun { color: #e4e4e7; }
+
+        /* INLINE CODE */
+        code {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.82em;
+            background: rgba(129,140,248,0.1);
+            border: 1px solid rgba(129,140,248,0.2);
+            color: var(--accent);
+            padding: 2px 7px;
+            border-radius: 5px;
+        }
+
+        /* TABLE */
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 28px;
+            font-size: 0.88rem;
+        }
+        .doc-table th {
+            text-align: left;
+            padding: 10px 16px;
+            background: #111113;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .doc-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: #a1a1aa;
+            vertical-align: top;
+        }
+        .doc-table tr:last-child td { border-bottom: none; }
+        .doc-table td:first-child { font-family: 'DM Mono', monospace; color: var(--accent); font-size: 0.8rem; }
+        .doc-table tr:hover td { background: rgba(129,140,248,0.03); }
+        .table-wrap { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 28px; }
+
+        /* DIVIDER */
+        hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+
+        /* HERO AREA */
+        .docs-hero {
+            padding: 48px 0 0;
+            margin-bottom: 16px;
+        }
+
+        .hero-title-big {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            margin-bottom: 18px;
+        }
+        .hero-title-big span {
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 60%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title-big-2 {
+            font-family: sans-serif;
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            margin-bottom: 18px;
+        }
+        .hero-title-big-2 span {
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 60%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* MODEL CARDS */
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .model-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .model-card:hover { border-color: rgba(129,140,248,0.3); transform: translateY(-2px); }
+
+        .model-card-icon {
+            width: 40px; height: 40px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(129,140,248,0.2);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            margin-bottom: 14px;
+        }
+
+        .model-card-name {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .model-card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* FEATURE CHIPS */
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-weight: 500;
+        }
+        .chip.accent { background: var(--accent-dim); border-color: rgba(129,140,248,0.25); color: var(--accent); }
+        .chip.warn { background: var(--warning-dim); border-color: rgba(251,191,36,0.25); color: var(--warning); }
+
+        /* ENDPOINT ROW */
+        .endpoint-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--code-bg);
+            border: 1px solid #27272a;
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.83rem;
+        }
+
+        .method-badge {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .method-post { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.25); }
+        .method-get  { background: rgba(129,140,248,0.15); color: var(--accent); border: 1px solid rgba(129,140,248,0.25); }
+
+        .endpoint-url { color: #d4d4d8; }
+
+        /* STATUS INDICATOR */
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+        .status-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--warning);
+            animation: pulse-warn 2s infinite;
+            flex-shrink: 0;
+        }
+        @keyframes pulse-warn {
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(251,191,36,0.4); }
+            50% { opacity: 0.7; transform: scale(1.2); box-shadow: 0 0 0 5px rgba(251,191,36,0); }
+        }
+        .status-text { font-size: 0.85rem; color: var(--warning); font-weight: 600; }
+
+        /* FOOTER */
+        footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 32px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer-logo {
+            font-family: sans-serif;
+            font-size: 1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .footer-text { font-size: 0.82rem; color: var(--text-muted); }
+        .footer-links { display: flex; gap: 20px; list-style: none; }
+        .footer-links a { font-size: 0.82rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text); }
+
+        /* MOBILE */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main-content { padding: 32px 20px 80px; border-left: none; }
+            nav { padding: 0 20px; }
+            .nav-links { display: none; }
+            .model-grid { grid-template-columns: 1fr; }
+            .page-wrapper { padding-top: 68px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-left">
+        <a href="https://mingai-nexucore.github.io/home/" class="nav-logo">MingAI</a>
+        <span class="nav-badge">Docs</span>
+    </div>
+    <ul class="nav-links">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#models">Models</a></li>
+        <li><a href="#api">API</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="https://mingai-nexucore.github.io/" class="nav-cta">Open App →</a></li>
+    </ul>
+</nav>
+
+<div class="page-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Getting Started</div>
+            <a class="sidebar-link active" href="#overview"><span class="dot"></span>Overview</a>
+            <a class="sidebar-link" href="#models"><span class="dot"></span>Models</a>
+            <a class="sidebar-link" href="#quick-start"><span class="dot"></span>Quick Start</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">API Reference</div>
+            <a class="sidebar-link" href="#api"><span class="dot"></span>Introduction</a>
+            <a class="sidebar-link" href="#api-endpoints"><span class="dot"></span>Endpoints</a>
+            <a class="sidebar-link" href="#api-request"><span class="dot"></span>Request Format</a>
+            <a class="sidebar-link" href="#api-response"><span class="dot"></span>Response Format</a>
+            <a class="sidebar-link" href="#api-auth"><span class="dot"></span>Authentication</a>
+            <a class="sidebar-link" href="#api-errors"><span class="dot"></span>Error Codes</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">App Features</div>
+            <a class="sidebar-link" href="#features"><span class="dot"></span>Chat Interface</a>
+            <a class="sidebar-link" href="#image-gen"><span class="dot"></span>Image Generation</a>
+            <a class="sidebar-link" href="#file-attach"><span class="dot"></span>File Attachments</a>
+            <a class="sidebar-link" href="#web-search"><span class="dot"></span>Web Search</a>
+            <a class="sidebar-link" href="#customization"><span class="dot"></span>Customization</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">More</div>
+            <a class="sidebar-link" href="#languages"><span class="dot"></span>Languages</a>
+            <a class="sidebar-link" href="#faq"><span class="dot"></span>FAQ</a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- HERO -->
+        <div class="docs-hero doc-section" id="overview">
+            <div class="section-eyebrow">Documentation</div>
+            <h1 class="hero-title-big"><span>MingAI</span> Docs</h1>
+            <p class="section-lead">Everything you need to understand, use, and build with MingAI — the AI assistant built by NexuCore. From the chat app to the API (coming soon), it's all here.</p>
+            <div class="chip-row">
+                <span class="chip accent">⚡ MingAI 2.1</span>
+                <span class="chip accent">🎨 MingImage 1.3</span>
+                <span class="chip warn">🔧 API – Work in Progress</span>
+                <span class="chip">🌐 17 Languages</span>
+                <span class="chip">🔒 No Sign-up Required</span>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- MODELS -->
+        <div class="doc-section" id="models">
+            <div class="section-eyebrow">Models</div>
+            <h2 class="section-title">MingAI Models</h2>
+            <p class="section-lead">NexuCore currently offers two models available through the MingAI app.</p>
+
+            <div class="model-grid">
+                <div class="model-card">
+                    <div class="model-card-icon">💬</div>
+                    <div class="model-card-name">MingAI 2.1</div>
+                    <p class="model-card-desc">The main conversational model. Handles coding, writing, reasoning, research, file analysis, and general-purpose tasks. Supports streaming responses and full markdown output.</p>
+                </div>
+                <div class="model-card">
+                    <div class="model-card-icon">🎨</div>
+                    <div class="model-card-name">MingImage 1.3</div>
+                    <p class="model-card-desc">The image generation model by NexuCore. Takes a text description and produces a high-quality 1024×1024 image. Supports prompt translation from any language.</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <span class="info-icon">ℹ️</span>
+                <p>You can switch between models in the app using the model selector tabs just above the input field — <strong style="color: var(--text);">MingAI 2.1</strong> for chat, <strong style="color: var(--text);">MingImage 1.3</strong> for image generation.</p>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- QUICK START -->
+        <div class="doc-section" id="quick-start">
+            <div class="section-eyebrow">Getting Started</div>
+            <h2 class="section-title">Quick Start</h2>
+            <p class="section-lead">MingAI requires no account, no installation, and no setup. Open the link below and start chatting immediately.</p>
+
+            <div class="success-box">
+                <span class="info-icon">✅</span>
+                <p><strong style="color: var(--green);">No sign-up required.</strong> MingAI runs entirely in your browser. Your chat history is saved to your device's local storage.</p>
+            </div>
+
+            <h3>1. Open the App</h3>
+            <p>Navigate to the MingAI web app in any modern browser:</p>
+            <div class="code-block">
+                <div class="code-header"><span class="code-lang">URL</span></div>
+                <pre><span class="val">https://mingai-nexucore.github.io/</span></pre>
+            </div>
+
+            <h3>2. Choose a Model</h3>
+            <p>Use the model tabs above the input field. Select <code>MingAI 2.1</code> for text conversations or <code>MingImage 1.3</code> to generate images from text descriptions.</p>
+
+            <h3>3. Type your prompt</h3>
+            <p>Type anything in the input box and press <kbd style="background:var(--card); border:1px solid var(--border); padding:2px 8px; border-radius:5px; font-size:0.82em; font-family:'DM Mono',monospace;">Enter</kbd> to send. Use <kbd style="background:var(--card); border:1px solid var(--border); padding:2px 8px; border-radius:5px; font-size:0.82em; font-family:'DM Mono',monospace;">Shift+Enter</kbd> for a new line.</p>
+
+            <h3>4. Explore Features</h3>
+            <p>Click the <code>⊕</code> button next to the input to access additional capabilities like file attachments and online web search.</p>
+        </div>
+
+        <hr>
+
+        <!-- API -->
+        <div class="doc-section" id="api">
+            <div class="section-eyebrow">API Reference</div>
+            <h2 class="section-title">The MingAI API</h2>
+
+            <div class="status-row">
+                <div class="status-dot"></div>
+                <span class="status-text">Work in Progress — Not yet publicly available</span>
+            </div>
+
+            <div class="wip-banner">
+                <span class="wip-icon">🚧</span>
+                <div>
+                    <div class="wip-banner-title">API is currently under development</div>
+                    <p class="wip-banner-text">The MingAI public API is a work in progress. The documentation below is a preview of the planned API structure. Endpoints, parameters, and authentication methods are subject to change before the official release. Do not use these endpoints in production applications yet.</p>
+                </div>
+            </div>
+
+            <p>The MingAI API will allow developers to programmatically access the MingAI 2.1 language model and MingImage 1.3 image generation model. Once released, you'll be able to integrate MingAI's capabilities directly into your own applications, workflows, and tools.</p>
+
+            <div class="info-box">
+                <span class="info-icon">📬</span>
+                <p>Want to be notified when the API launches? Reach out to the NexuCore team at <strong style="color: var(--accent);">ming.nexucore@gmail.com</strong> to express interest.</p>
+            </div>
+        </div>
+
+        <!-- API ENDPOINTS -->
+        <div class="doc-section" id="api-endpoints">
+            <h3>Planned Endpoints</h3>
+            <p>The following endpoints are planned for the initial API release:</p>
+
+            <div class="endpoint-row">
+                <span class="method-badge method-post">POST</span>
+                <span class="endpoint-url">/v1/chat/completions</span>
+            </div>
+            <p>Send a message and receive a response from MingAI 2.1. Supports both streaming and non-streaming modes.</p>
+
+            <div class="endpoint-row">
+                <span class="method-badge method-post">POST</span>
+                <span class="endpoint-url">/v1/images/generate</span>
+            </div>
+            <p>Generate an image from a text prompt using MingImage 1.3.</p>
+
+            <div class="endpoint-row">
+                <span class="method-badge method-get">GET</span>
+                <span class="endpoint-url">/v1/models</span>
+            </div>
+            <p>Returns a list of all available MingAI models and their metadata.</p>
+        </div>
+
+        <!-- API REQUEST FORMAT -->
+        <div class="doc-section" id="api-request">
+            <h3>Request Format (Preview)</h3>
+            <p>The planned request structure for the <code>/v1/chat/completions</code> endpoint. This is subject to change.</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-lang">JSON – Request Body</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><span class="pun">{</span>
+  <span class="key">"model"</span><span class="pun">:</span> <span class="str">"mingai-2.1"</span><span class="pun">,</span>
+  <span class="key">"messages"</span><span class="pun">:</span> <span class="pun">[</span>
+    <span class="pun">{</span>
+      <span class="key">"role"</span><span class="pun">:</span> <span class="str">"system"</span><span class="pun">,</span>
+      <span class="key">"content"</span><span class="pun">:</span> <span class="str">"You are a helpful assistant."</span>
+    <span class="pun">},</span>
+    <span class="pun">{</span>
+      <span class="key">"role"</span><span class="pun">:</span> <span class="str">"user"</span><span class="pun">,</span>
+      <span class="key">"content"</span><span class="pun">:</span> <span class="str">"What is the capital of France?"</span>
+    <span class="pun">}</span>
+  <span class="pun">],</span>
+  <span class="key">"stream"</span><span class="pun">:</span> <span class="num">false</span><span class="pun">,</span>
+  <span class="key">"max_tokens"</span><span class="pun">:</span> <span class="num">1024</span>
+<span class="pun">}</span></pre>
+            </div>
+
+            <div class="table-wrap">
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>model</td>
+                            <td><span class="chip" style="font-size:11px; padding:2px 8px;">string</span></td>
+                            <td>The model to use. Currently <code>mingai-2.1</code>.</td>
+                        </tr>
+                        <tr>
+                            <td>messages</td>
+                            <td><span class="chip" style="font-size:11px; padding:2px 8px;">array</span></td>
+                            <td>Array of message objects. Each message has a <code>role</code> (<code>system</code>, <code>user</code>, or <code>assistant</code>) and a <code>content</code> string.</td>
+                        </tr>
+                        <tr>
+                            <td>stream</td>
+                            <td><span class="chip" style="font-size:11px; padding:2px 8px;">boolean</span></td>
+                            <td>If <code>true</code>, the response will be streamed as Server-Sent Events. Defaults to <code>false</code>.</td>
+                        </tr>
+                        <tr>
+                            <td>max_tokens</td>
+                            <td><span class="chip" style="font-size:11px; padding:2px 8px;">integer</span></td>
+                            <td>Maximum number of tokens to generate. Optional.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Image Generation Request (Preview)</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-lang">JSON – Image Request Body</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><span class="pun">{</span>
+  <span class="key">"model"</span><span class="pun">:</span> <span class="str">"mingimage-1.3"</span><span class="pun">,</span>
+  <span class="key">"prompt"</span><span class="pun">:</span> <span class="str">"A futuristic city at sunset, cyberpunk style"</span><span class="pun">,</span>
+  <span class="key">"width"</span><span class="pun">:</span> <span class="num">1024</span><span class="pun">,</span>
+  <span class="key">"height"</span><span class="pun">:</span> <span class="num">1024</span>
+<span class="pun">}</span></pre>
+            </div>
+        </div>
+
+        <!-- API RESPONSE -->
+        <div class="doc-section" id="api-response">
+            <h3>Response Format (Preview)</h3>
+            <p>Expected response structure from <code>/v1/chat/completions</code> when <code>stream</code> is <code>false</code>.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-lang">JSON – Response</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><span class="pun">{</span>
+  <span class="key">"id"</span><span class="pun">:</span> <span class="str">"msg_01XYZ..."</span><span class="pun">,</span>
+  <span class="key">"model"</span><span class="pun">:</span> <span class="str">"mingai-2.1"</span><span class="pun">,</span>
+  <span class="key">"choices"</span><span class="pun">:</span> <span class="pun">[</span>
+    <span class="pun">{</span>
+      <span class="key">"index"</span><span class="pun">:</span> <span class="num">0</span><span class="pun">,</span>
+      <span class="key">"message"</span><span class="pun">:</span> <span class="pun">{</span>
+        <span class="key">"role"</span><span class="pun">:</span> <span class="str">"assistant"</span><span class="pun">,</span>
+        <span class="key">"content"</span><span class="pun">:</span> <span class="str">"The capital of France is Paris."</span>
+      <span class="pun">},</span>
+      <span class="key">"finish_reason"</span><span class="pun">:</span> <span class="str">"stop"</span>
+    <span class="pun">}</span>
+  <span class="pun">],</span>
+  <span class="key">"usage"</span><span class="pun">:</span> <span class="pun">{</span>
+    <span class="key">"prompt_tokens"</span><span class="pun">:</span> <span class="num">28</span><span class="pun">,</span>
+    <span class="key">"completion_tokens"</span><span class="pun">:</span> <span class="num">9</span><span class="pun">,</span>
+    <span class="key">"total_tokens"</span><span class="pun">:</span> <span class="num">37</span>
+  <span class="pun">}</span>
+<span class="pun">}</span></pre>
+            </div>
+        </div>
+
+        <!-- AUTH -->
+        <div class="doc-section" id="api-auth">
+            <h3>Authentication (Preview)</h3>
+            <p>The API will use <strong style="color: var(--text);">Bearer token authentication</strong>. Include your API key in the <code>Authorization</code> header with every request.</p>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-lang">HTTP Header</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><span class="key">Authorization</span><span class="pun">:</span> <span class="str">Bearer YOUR_API_KEY</span>
+<span class="key">Content-Type</span><span class="pun">:</span> <span class="str">application/json</span></pre>
+            </div>
+
+            <div class="wip-banner">
+                <span class="wip-icon">🚧</span>
+                <div>
+                    <div class="wip-banner-title">API Keys not yet available</div>
+                    <p class="wip-banner-text">API keys and the developer portal are not yet open to the public. This will be available when the API officially launches. Stay tuned!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ERROR CODES -->
+        <div class="doc-section" id="api-errors">
+            <h3>Error Codes (Preview)</h3>
+
+            <div class="table-wrap">
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>401</td>
+                            <td>Unauthorized</td>
+                            <td>Invalid or missing API key in the Authorization header.</td>
+                        </tr>
+                        <tr>
+                            <td>400</td>
+                            <td>Bad Request</td>
+                            <td>Malformed JSON body or missing required parameters.</td>
+                        </tr>
+                        <tr>
+                            <td>429</td>
+                            <td>Rate Limited</td>
+                            <td>You have exceeded the request rate limit. Please slow down.</td>
+                        </tr>
+                        <tr>
+                            <td>500</td>
+                            <td>Server Error</td>
+                            <td>An unexpected server error occurred on NexuCore's end.</td>
+                        </tr>
+                        <tr>
+                            <td>503</td>
+                            <td>Unavailable</td>
+                            <td>The model is temporarily unavailable. Retry after a short delay.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- FEATURES -->
+        <div class="doc-section" id="features">
+            <div class="section-eyebrow">App Features</div>
+            <h2 class="section-title">Chat Interface</h2>
+            <p>MingAI's web app provides a clean, fast interface for interacting with the models. Here's an overview of what's available.</p>
+
+            <h3>Chat History</h3>
+            <p>All conversations are automatically saved to your browser's local storage. Open the sidebar (the ☰ menu) to see and resume past conversations. You can also delete individual chats from the sidebar.</p>
+
+            <h3>System Prompt</h3>
+            <p>You can define custom AI behavior using a system prompt. Open <strong style="color:var(--text);">Settings → AI Behavior / System Prompt</strong> and write instructions for how MingAI should respond. For example: <em style="color:var(--text-muted);">"Always respond in bullet points."</em> or <em style="color:var(--text-muted);">"You are a senior software engineer. Be concise and technical."</em></p>
+
+            <h3>Markdown & Code Rendering</h3>
+            <p>All AI responses support full Markdown rendering, including headers, bold/italic text, tables, and syntax-highlighted code blocks. You can copy individual code blocks with the copy button that appears on hover.</p>
+        </div>
+
+        <!-- IMAGE GEN -->
+        <div class="doc-section" id="image-gen">
+            <h2 class="section-title">Image Generation</h2>
+            <p>Switch to the <code>MingImage 1.3</code> tab to generate images from text. Type a description in any language — MingImage automatically translates your prompt to English for best results before generating.</p>
+
+            <h3>Tips for Better Images</h3>
+            <p>Be descriptive. Include style, mood, lighting, and subject details. Here are some example prompts:</p>
+
+            <div class="code-block">
+                <div class="code-header"><span class="code-lang">Example Prompts</span></div>
+                <pre><span class="cm"># Simple</span>
+<span class="str">A cat sitting on a windowsill at sunset</span>
+
+<span class="cm"># Detailed</span>
+<span class="str">A futuristic city skyline at night, neon lights reflecting
+off wet streets, cyberpunk aesthetic, cinematic lighting,
+ultra-detailed, 8K</span>
+
+<span class="cm"># Artistic</span>
+<span class="str">An oil painting of a forest in autumn, impressionist style,
+warm orange and red tones, soft brushstrokes</span></pre>
+            </div>
+
+            <div class="info-box">
+                <span class="info-icon">💡</span>
+                <p>Generated images can be downloaded using the download button that appears below the image. Right-click saving is intentionally disabled.</p>
+            </div>
+        </div>
+
+        <!-- FILE ATTACH -->
+        <div class="doc-section" id="file-attach">
+            <h2 class="section-title">File Attachments</h2>
+            <p>Click the <code>⊕</code> button in the input area and select <strong style="color:var(--text);">Attach File</strong> to upload one or more files. MingAI will read the file contents and you can ask questions about them.</p>
+
+            <h3>Supported File Types</h3>
+            <div class="chip-row">
+                <span class="chip">.txt</span><span class="chip">.py</span><span class="chip">.js</span><span class="chip">.ts</span>
+                <span class="chip">.jsx / .tsx</span><span class="chip">.html</span><span class="chip">.css</span>
+                <span class="chip">.json</span><span class="chip">.yaml / .yml</span><span class="chip">.md</span>
+                <span class="chip">.java</span><span class="chip">.c / .cpp / .cs</span><span class="chip">.php</span>
+                <span class="chip">.rb</span><span class="chip">.go</span><span class="chip">.rs</span><span class="chip">.sql</span>
+                <span class="chip">.xml</span><span class="chip">.sh</span><span class="chip">.lua</span><span class="chip">.r</span>
+            </div>
+
+            <p>File contents are included directly in the message context. For large files, content is automatically truncated at 80,000 characters. You can attach multiple files at once.</p>
+        </div>
+
+        <!-- WEB SEARCH -->
+        <div class="doc-section" id="web-search">
+            <h2 class="section-title">Online Web Search</h2>
+            <p>Enable the <strong style="color:var(--text);">Online Research</strong> toggle (via the <code>⊕</code> menu) to give MingAI access to real-time web search results before it responds. This allows MingAI to answer questions about recent events, live data, or anything beyond its training knowledge.</p>
+
+            <div class="info-box">
+                <span class="info-icon">🌐</span>
+                <p>When online research is active, a <strong style="color: var(--accent);">Search</strong> badge will appear next to the input field. Web search results are automatically appended to your message context before the AI responds.</p>
+            </div>
+
+            <p>Web search is powered by Tavily. Results are limited to the top 5 most relevant sources for each query.</p>
+        </div>
+
+        <!-- CUSTOMIZATION -->
+        <div class="doc-section" id="customization">
+            <h2 class="section-title">Customization</h2>
+
+            <h3>Theme</h3>
+            <p>MingAI supports both a <strong style="color:var(--text);">Dark Mode</strong> (default) and a <strong style="color:var(--text);">Light Mode</strong>. Toggle the theme in <strong style="color:var(--text);">Settings → Light Mode</strong>. Your preference is saved locally.</p>
+
+            <h3>Language</h3>
+            <p>The app interface can be switched to 17 different languages from the Settings panel. Changing the language updates all UI text, placeholder strings, sidebar labels, and suggestion cards.</p>
+        </div>
+
+        <!-- LANGUAGES -->
+        <div class="doc-section" id="languages">
+            <div class="section-eyebrow">Internationalization</div>
+            <h2 class="section-title">Supported Languages</h2>
+            <p>MingAI's interface supports the following 17 languages:</p>
+
+            <div class="chip-row">
+                <span class="chip">🇬🇧 English</span>
+                <span class="chip">🇩🇪 Deutsch</span>
+                <span class="chip">🇫🇷 Français</span>
+                <span class="chip">🇪🇸 Español</span>
+                <span class="chip">🇮🇹 Italiano</span>
+                <span class="chip">🇵🇹 Português</span>
+                <span class="chip">🇳🇱 Nederlands</span>
+                <span class="chip">🇵🇱 Polski</span>
+                <span class="chip">🇷🇺 Русский</span>
+                <span class="chip">🇨🇳 中文</span>
+                <span class="chip">🇯🇵 日本語</span>
+                <span class="chip">🇰🇷 한국어</span>
+                <span class="chip">🇸🇦 العربية</span>
+                <span class="chip">🇮🇳 हिन्दी</span>
+                <span class="chip">🇹🇷 Türkçe</span>
+                <span class="chip">🇮🇩 Bahasa Indonesia</span>
+                <span class="chip accent">🏴‍☠️ Pirate-ish</span>
+            </div>
+
+            <p>Note: MingAI itself (the AI responses) can converse in any language regardless of the interface language setting.</p>
+        </div>
+
+        <!-- FAQ -->
+        <div class="doc-section" id="faq">
+            <div class="section-eyebrow">FAQ</div>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+
+            <h3>Is MingAI free to use?</h3>
+            <p>Yes. The MingAI web app is completely free. No account, no credit card, no sign-up required.</p>
+
+            <h3>Where is my chat data stored?</h3>
+            <p>All chat history is stored in your browser's local storage. Nothing is uploaded to any server by the app itself. Clearing your browser data will erase your history.</p>
+
+            <h3>What is MingAI built on?</h3>
+            <p>MingAI is built by NexuCore. The underlying model and infrastructure are proprietary to NexuCore. MingAI will never disclose or reference any third-party AI providers or technologies.</p>
+
+            <h3>When will the API be available?</h3>
+            <p>The MingAI API is currently a work in progress. There is no official release date yet. If you're interested in early access or want to be notified at launch, contact <strong style="color:var(--accent);">ming.nexucore@gmail.com</strong>.</p>
+
+            <h3>Can I use MingAI for commercial projects?</h3>
+            <p>Please reach out to NexuCore directly at <strong style="color:var(--accent);">ming.nexucore@gmail.com</strong> regarding commercial use terms and licensing.</p>
+
+            <h3>Can I embed MingAI into my website?</h3>
+            <p>Not officially at this time. Once the API is released, you'll be able to integrate MingAI's capabilities into your own apps. Stay tuned for updates.</p>
+        </div>
+
+    </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-logo">MingAI</div>
+    <p class="footer-text">© 2025 NexuCore. All rights reserved.</p>
+    <ul class="footer-links">
+        <li><a href="https://mingai-nexucore.github.io/">Open App</a></li>
+        <li><a href="https://mingai-nexucore.github.io/home/">Home</a></li>
+        <li><a href="mailto:ming.nexucore@gmail.com">Contact</a></li>
+    </ul>
+</footer>
+
+<script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.doc-section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => entry.target.classList.add('visible'), i * 60);
+            }
+        });
+    }, { threshold: 0.08 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Active sidebar link on scroll
+    const sections = document.querySelectorAll('[id]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            if (window.scrollY >= sectionTop) current = section.getAttribute('id');
+        });
+        sidebarLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+        });
+    });
+
+    // Copy code
+    function copyCode(btn) {
+        const pre = btn.closest('.code-block').querySelector('pre');
+        navigator.clipboard.writeText(pre.innerText);
+        btn.textContent = 'Copied!';
+        btn.style.color = 'var(--accent)';
+        setTimeout(() => { btn.textContent = 'Copy'; btn.style.color = ''; }, 2000);
+    }
+</script>
+</body>
+</html>
