@@ -13,6 +13,7 @@
 - **Text-to-speech** — Listen to any AI response read aloud with automatic language detection
 - **Online research** — Toggle web search to let MingAI pull in live, up-to-date information from the internet
 - **File attachments** — Attach code, text, document, and image files directly to your messages
+- **PDF analysis** — Attach any PDF and MingAI 2.4 will read and analyze its full contents
 - **Chat history** — Conversations are saved locally and accessible from the sidebar
 - **Markdown rendering** — Full markdown support including syntax-highlighted code blocks
 - **Customizable system prompt** — Tailor MingAI's personality and behavior via Settings
@@ -33,6 +34,7 @@
 | Attach an image | Click **+** → **Attach File** → select an image file |
 | Enable web search | Click **+** → toggle **Online Research** |
 | Attach a file | Click **+** → **Attach File** |
+| Analyze a PDF | Click **+** → **Attach File** → select a PDF file |
 | Listen to a response | Click the 🔊 button below any AI response |
 | New chat | Click **New chat** in the sidebar |
 | Switch chats | Click any conversation in the sidebar |
@@ -48,7 +50,7 @@
 
 | Model | Purpose |
 |---|---|
-| **MingAI 2.4** | Text chat, coding, writing, analysis, file reading, image vision |
+| **MingAI 2.4** | Text chat, coding, writing, analysis, file reading, image vision, PDF analysis |
 | **MingImage 1.3** | AI image generation from text prompts |
 
 ---
@@ -79,6 +81,17 @@ Your custom instructions are layered on top of MingAI's core behavior and saved 
 
 ```
 mingai/
+├── assets/
+│   ├── logo.ico
+│   ├── logo.png
+│   └── thumb.png
+├── docs/
+│   └── index.html
+├── home/
+│   └── index.html
+├── 404.html
+├── google63dcf8c758126a2c.html
+├── README.md
 └── index.html      # Entire application — UI, styles, and logic in one file
 ```
 
