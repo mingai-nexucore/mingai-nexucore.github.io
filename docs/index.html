@@ -604,6 +604,7 @@
             <a class="sidebar-link" href="#image-gen"><span class="dot"></span>Image Generation</a>
             <a class="sidebar-link" href="#file-attach"><span class="dot"></span>File Attachments</a>
             <a class="sidebar-link" href="#image-vision"><span class="dot"></span>Image Vision</a>
+            <a class="sidebar-link" href="#pdf-analysis"><span class="dot"></span>PDF Analysis</a>
             <a class="sidebar-link" href="#tts"><span class="dot"></span>Text-to-Speech</a>
             <a class="sidebar-link" href="#web-search"><span class="dot"></span>Web Search</a>
             <a class="sidebar-link" href="#customization"><span class="dot"></span>Customization</a>
@@ -974,7 +975,7 @@ warm orange and red tones, soft brushstrokes</span></pre>
                 <span class="chip">.json</span><span class="chip">.yaml / .yml</span><span class="chip">.md</span>
                 <span class="chip">.java</span><span class="chip">.c / .cpp / .cs</span><span class="chip">.php</span>
                 <span class="chip">.rb</span><span class="chip">.go</span><span class="chip">.rs</span><span class="chip">.sql</span>
-                <span class="chip">.xml</span><span class="chip">.sh</span><span class="chip">.lua</span><span class="chip">.r</span>
+                <span class="chip">.xml</span><span class="chip">.sh</span><span class="chip">.lua</span><span class="chip">.r</span><span class="chip accent">.pdf</span>
             </div>
 
             <p>File contents are included directly in the message context. For large files, content is automatically truncated at 80,000 characters. You can attach multiple files at once.</p>
@@ -1003,8 +1004,22 @@ warm orange and red tones, soft brushstrokes</span></pre>
             </div>
         </div>
 
-        <!-- TTS -->
-        <div class="doc-section" id="tts">
+<!-- PDF ANALYSIS -->
+<div class="doc-section" id="pdf-analysis">
+    <h2 class="section-title">PDF Analysis</h2>
+    <p>MingAI 2.4 can read and analyze PDF files you attach to your messages. Click the <code>⊕</code> button, select <strong style="color:var(--text);">Attach File</strong>, and choose a <code>.pdf</code> file. MingAI will extract and interpret the document's contents and respond to any questions you have about it.</p>
+
+    <h3>How to Use</h3>
+    <p>Attach a PDF and ask anything — <em style="color:var(--text-muted);">"Summarize this document"</em>, <em style="color:var(--text-muted);">"What are the key points?"</em>, <em style="color:var(--text-muted);">"Extract all the dates mentioned"</em>, or <em style="color:var(--text-muted);">"Explain section 3 in simple terms"</em>. MingAI will analyze the full content and respond in detail.</p>
+
+    <div class="info-box">
+        <span class="info-icon">📄</span>
+        <p>Attached PDFs are displayed with a <strong style="color:#f87171;">red file icon</strong> in the chat for easy identification. PDF analysis is powered by MingAI's vision capabilities and works alongside image attachments in the same message.</p>
+    </div>
+</div>
+
+<!-- TTS -->
+<div class="doc-section" id="tts">
             <h2 class="section-title">Text-to-Speech</h2>
             <p>Every AI response includes a <strong style="color:var(--text);">🔊 read-aloud button</strong> below the message. Click it to have MingAI's response spoken aloud in your browser. Click it again to stop playback at any time.</p>
 
@@ -1089,6 +1104,9 @@ warm orange and red tones, soft brushstrokes</span></pre>
 
             <h3>Can MingAI see and understand images?</h3>
             <p>Yes. MingAI 2.4 supports image vision. Attach any image to your message and MingAI will analyze its contents and answer questions about it. Supported formats include PNG, JPG, GIF, WEBP, and BMP.</p>
+
+            <h3>Can MingAI read PDF files?</h3>
+            <p>Yes. MingAI 2.4 supports PDF analysis. Attach any PDF to your message and MingAI will read and interpret its contents. You can ask for summaries, extract specific information, or ask detailed questions about the document.</p>
 
             <h3>When will the API be available?</h3>
             <p>The MingAI API is currently a work in progress. There is no official release date yet. If you're interested in early access or want to be notified at launch, contact <strong style="color:var(--accent);">ming.nexucore@gmail.com</strong>.</p>
