@@ -494,6 +494,7 @@ window.saveSettings = function() { var lang = document.getElementById('settings-
 
 (function() { if (!localStorage.getItem('mingai_language')) { var _bl = (navigator.language || navigator.userLanguage || 'en').toLowerCase().split('-')[0]; var _supported = ['en','de','fr','es','it','pt','nl','pl','ru','zh','ja','ko','ar','hi','tr','id','pirate']; localStorage.setItem('mingai_language', _supported.indexOf(_bl) > -1 ? _bl : 'en'); } })(); _applyLanguage(_getCurrentLang());
 _01Oll11I();
+document.addEventListener('DOMContentLoaded', function() { _applyLanguage(_getCurrentLang()); });
 })();
 function togglePlusPopup(e) { e.stopPropagation(); var p = document.getElementById('plus-popup'); p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
 document.addEventListener('click', function(e) { var p = document.getElementById('plus-popup'); var btn = document.getElementById('plus-btn'); if (!p.contains(e.target) && e.target !== btn) { p.style.display = 'none'; } });
