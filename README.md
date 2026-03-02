@@ -14,7 +14,8 @@
 - **Online research** — Toggle web search to let MingAI pull in live, up-to-date information from the internet
 - **File attachments** — Attach code, text, document, and image files directly to your messages
 - **PDF analysis** — Attach any PDF and MingAI 2.4 will read and analyze its full contents
-- **Chat history** — Conversations are saved locally and accessible from the sidebar
+- **Chat history** — Conversations are saved to your browser's local storage when signed out, or synced to your Google account when signed in
+- **Google Sign-In** — Sign in with your Google account to save and access your conversation history across any device or browser
 - **Markdown rendering** — Full markdown support including syntax-highlighted code blocks
 - **Customizable system prompt** — Tailor MingAI's personality and behavior via Settings
 - **Multi-language interface** — The UI supports 17 languages including English, German, French, Spanish, Italian, Portuguese, Dutch, Polish, Russian, Chinese, Japanese, Korean, Arabic, Hindi, Turkish, Indonesian, and Pirate
@@ -22,6 +23,21 @@
 - **Copy buttons** — Copy full responses or individual code blocks with one click
 - **Suggestion cards** — Quick-start prompts on the home screen for common tasks
 - **Mobile responsive** — Fully functional on phones and tablets with a slide-out sidebar
+
+---
+
+## Account & Chat Saving
+
+All core features work **without an account** — text chat, image generation, image vision, PDF analysis, file attachments, and web search have no restrictions.
+
+**Chat history saving** depends on whether you are signed in:
+
+| State | Chat History |
+|---|---|
+| **Signed out** | Saved to your browser's local storage only. Clearing browser data will erase history. |
+| **Signed in with Google** | Saved to your account and accessible from any device or browser. |
+
+Sign in using the **Sign in** button in the top-right corner of the app.
 
 ---
 
@@ -39,6 +55,8 @@
 | New chat | Click **New chat** in the sidebar |
 | Switch chats | Click any conversation in the sidebar |
 | Delete a chat | Hover a conversation and click the trash icon |
+| Sign in | Click **Sign in** in the top-right corner and choose Google |
+| Sign out | Click your name in the top-right corner → **Sign out** |
 | Open settings | Click the gear icon in the top-right corner |
 | Toggle theme | Settings → Light Mode toggle |
 | Change language | Settings → Language |
@@ -72,8 +90,9 @@ Your custom instructions are layered on top of MingAI's core behavior and saved 
 - **Vanilla HTML/CSS/JavaScript** — no frameworks
 - **[Marked.js](https://marked.js.org/)** — Markdown parsing
 - **[highlight.js](https://highlightjs.org/)** — Syntax highlighting
+- **[Firebase Auth](https://firebase.google.com/)** — Google Sign-In
 - **Web Speech API** — Built-in browser text-to-speech
-- **localStorage** — Client-side chat history persistence
+- **localStorage** — Client-side chat history persistence (when signed out)
 
 ---
 
