@@ -17,103 +17,7 @@
     <meta name="twitter:description" content="Chat, code, and create with MingAI by NexuCore.">
     <meta name="twitter:image" content="https://mingai-nexucore.github.io/assets/thumb.png">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAFqNEfpC-1xuTFiD5nP1gRvH00hvaPhnQ",
-    authDomain: "mingai-nexucore.firebaseapp.com",
-    projectId: "mingai-nexucore",
-    storageBucket: "mingai-nexucore.firebasestorage.app",
-    messagingSenderId: "231430535977",
-    appId: "1:231430535977:web:cf6fa31f692c1af081d538",
-    measurementId: "G-3KW99Q796J"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const provider = new GoogleAuthProvider();
-
-  window._mingaiDB = db;
-  window._mingaiAuth = auth;
-
-  window._mingaiSignIn = async (providerType) => {
-    try {
-      let selectedProvider;
-      if (providerType === 'github') {
-        selectedProvider = new GithubAuthProvider();
-      } else {
-        selectedProvider = new GoogleAuthProvider();
-      }
-      await signInWithPopup(auth, selectedProvider);
-    } catch (e) {
-      alert("Sign-in failed: " + e.message);
-    }
-  };
-
-  window._mingaiSignOut = async () => {
-    await signOut(auth);
-  };
-
-  // Save a single chat to Firestore
-  window._saveToFirestore = async (uid, chatObj) => {
-    try {
-      await setDoc(doc(db, "users", uid, "chats", chatObj.id), chatObj);
-    } catch(e) { console.error("Save error", e); }
-  };
-
-  // Delete a chat from Firestore
-  window._deleteFromFirestore = async (uid, chatId) => {
-    try {
-      await deleteDoc(doc(db, "users", uid, "chats", chatId));
-    } catch(e) {}
-  };
-
-  // Load all chats from Firestore
-  window._loadFromFirestore = async (uid) => {
-    try {
-      const snap = await getDocs(collection(db, "users", uid, "chats"));
-      const chats = [];
-      snap.forEach(d => chats.push(d.data()));
-      chats.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-      return chats;
-    } catch(e) { return []; }
-  };
-
-  onAuthStateChanged(auth, async (user) => {
-    const authBar = document.getElementById('auth-bar');
-    const userAvatar = document.getElementById('user-avatar');
-    const userName = document.getElementById('user-name');
-    const signInBtn = document.getElementById('signin-btn');
-
-    window._mingaiCurrentUser = user || null;
-
-if (user) {
-  if (userAvatar) { userAvatar.src = user.photoURL || ''; userAvatar.style.display = user.photoURL ? 'block' : 'none'; }
-  if (userName) userName.textContent = user.displayName || user.email;
-  if (signInBtn) signInBtn.style.display = 'none';
-  const stBtn = document.getElementById('sidebar-toggle-btn'); if (stBtn) stBtn.style.display = 'flex';
-      // Load chats from Firestore into localStorage-style structure then render
-      const chats = await window._loadFromFirestore(user.uid);
-      localStorage.setItem('mingai_chats', JSON.stringify(chats));
-      if (typeof _01Oll11I === 'function') _01Oll11I();
-} else {
-  window._mingaiCurrentUser = null;
-  if (userAvatar) userAvatar.style.display = 'none';
-  if (userName) userName.textContent = '';
-  if (signInBtn) signInBtn.style.display = 'flex';
-  const stBtn = document.getElementById('sidebar-toggle-btn'); if (stBtn) stBtn.style.display = 'none';
-      // Clear chat history display when signed out
-      localStorage.removeItem('mingai_chats');
-      if (typeof _01Oll11I === 'function') _01Oll11I();
-    }
-  });
-</script>
+    <script type="module"> import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"; import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"; import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"; const firebaseConfig = { apiKey: "AIzaSyAFqNEfpC-1xuTFiD5nP1gRvH00hvaPhnQ", authDomain: "mingai-nexucore.firebaseapp.com", projectId: "mingai-nexucore", storageBucket: "mingai-nexucore.firebasestorage.app", messagingSenderId: "231430535977", appId: "1:231430535977:web:cf6fa31f692c1af081d538", measurementId: "G-3KW99Q796J" }; const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app); const provider = new GoogleAuthProvider(); window._mingaiDB = db; window._mingaiAuth = auth; window._mingaiSignIn = async (providerType) => { try { let selectedProvider; if (providerType === 'github') { selectedProvider = new GithubAuthProvider(); } else { selectedProvider = new GoogleAuthProvider(); } await signInWithPopup(auth, selectedProvider); } catch (e) { alert("Sign-in failed: " + e.message); } }; window._mingaiSignOut = async () => { await signOut(auth); }; window._saveToFirestore = async (uid, chatObj) => { try { await setDoc(doc(db, "users", uid, "chats", chatObj.id), chatObj); } catch(e) { console.error("Save error", e); } }; window._deleteFromFirestore = async (uid, chatId) => { try { await deleteDoc(doc(db, "users", uid, "chats", chatId)); } catch(e) {} }; window._loadFromFirestore = async (uid) => { try { const snap = await getDocs(collection(db, "users", uid, "chats")); const chats = []; snap.forEach(d => chats.push(d.data())); chats.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)); return chats; } catch(e) { return []; } }; onAuthStateChanged(auth, async (user) => { const authBar = document.getElementById('auth-bar'); const userAvatar = document.getElementById('user-avatar'); const userName = document.getElementById('user-name'); const signInBtn = document.getElementById('signin-btn'); window._mingaiCurrentUser = user || null; if (user) { if (userAvatar) { userAvatar.src = user.photoURL || ''; userAvatar.style.display = user.photoURL ? 'block' : 'none'; } if (userName) userName.textContent = user.displayName || user.email; const avatarMenu = document.getElementById('user-avatar-menu'); if (avatarMenu) { avatarMenu.src = user.photoURL || ''; avatarMenu.style.display = user.photoURL ? 'block' : 'none'; } const nameMenu = document.getElementById('user-name-menu'); if (nameMenu) nameMenu.textContent = user.displayName || ''; const emailMenu = document.getElementById('user-email-menu'); if (emailMenu) emailMenu.textContent = user.email || ''; if (signInBtn) signInBtn.style.display = 'none'; const stBtn = document.getElementById('sidebar-toggle-btn'); if (stBtn) stBtn.style.display = 'flex'; const chats = await window._loadFromFirestore(user.uid); localStorage.setItem('mingai_chats', JSON.stringify(chats)); if (typeof _01Oll11I === 'function') _01Oll11I(); } else { window._mingaiCurrentUser = null; if (userAvatar) userAvatar.style.display = 'none'; if (userName) userName.textContent = ''; if (signInBtn) signInBtn.style.display = 'flex'; const stBtn = document.getElementById('sidebar-toggle-btn'); if (stBtn) stBtn.style.display = 'none'; localStorage.removeItem('mingai_chats'); if (typeof _01Oll11I === 'function') _01Oll11I(); } }); </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
@@ -321,10 +225,29 @@ body.light-theme .attached-file-chip { background:rgba(99,102,241,0.1); border-c
         <div class="logo-top" onclick="location.reload()">MingAI</div>
 <div class="header-right" style="display:flex;align-items:center;gap:8px;">
     <!-- User info (shown when signed in) -->
-    <div style="display:flex;align-items:center;gap:8px;cursor:pointer;" title="Sign out" onclick="if(confirm('Sign out?')) window._mingaiSignOut()">
-      <img id="user-avatar" src="" alt="avatar" style="width:28px;height:28px;border-radius:50%;object-fit:cover;display:none;border:1px solid rgba(129,140,248,0.4);">
-      <span id="user-name" style="font-size:12px;color:var(--text-muted);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+    <div style="position:relative;">
+  <div onclick="document.getElementById('user-menu').style.display = document.getElementById('user-menu').style.display === 'none' ? 'flex' : 'none'" style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 8px;border-radius:20px;transition:background 0.15s;" onmouseover="this.style.background='rgba(129,140,248,0.1)'" onmouseout="this.style.background='transparent'">
+    <img id="user-avatar" src="" alt="avatar" style="width:28px;height:28px;border-radius:50%;object-fit:cover;display:none;border:1px solid rgba(129,140,248,0.4);">
+    <span id="user-name" style="font-size:12px;color:var(--text-muted);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <!-- User dropdown menu -->
+  <div id="user-menu" style="display:none; flex-direction:column; position:absolute; top:calc(100% + 8px); right:0; background:var(--card); border:1px solid #3f3f46; border-radius:12px; padding:8px; min-width:220px; box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:999; gap:4px;">
+    <!-- User info row -->
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 10px 12px;border-bottom:1px solid #27272a;margin-bottom:4px;">
+      <img id="user-avatar-menu" src="" alt="avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid rgba(129,140,248,0.4);">
+      <div style="overflow:hidden;">
+        <div id="user-name-menu" style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;"></div>
+        <div id="user-email-menu" style="font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;"></div>
+      </div>
     </div>
+    <!-- Sign out button -->
+    <button onclick="document.getElementById('signout-confirm').style.display='flex'; document.getElementById('user-menu').style.display='none';" style="display:flex;align-items:center;gap:10px;background:transparent;border:none;color:#f87171;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;width:100%;text-align:left;transition:background 0.15s;" onmouseover="this.style.background='rgba(248,113,113,0.1)'" onmouseout="this.style.background='transparent'">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign out
+    </button>
+  </div>
+</div>
     <!-- Sign in button (shown when signed out) -->
     <!-- Login button + dropdown -->
 <div id="signin-btn" style="position:relative; display:flex;">
@@ -606,7 +529,22 @@ var _GEM_KEY=_decXor(_gck,_gdk);
 async function analyzeImagesWithMingAI(files, userText) { var imageFiles = files.filter(function(f){ return f.isImage || f.type === 'application/pdf'; }); if (imageFiles.length === 0) return ''; var results = ''; for (var i = 0; i < imageFiles.length; i++) { var f = imageFiles[i]; try { var base64 = f.content.split(',')[1]; var isPDF = f.type === 'application/pdf'; var mimeType = isPDF ? 'application/pdf' : (f.type || 'image/jpeg'); var prompt = userText ? 'The user says: "' + userText + '". Analyze this ' + (isPDF ? 'PDF document' : 'image') + ' in detail and describe everything relevant to what the user is asking. Be thorough.' : 'Analyze this ' + (isPDF ? 'PDF document' : 'image') + ' in full detail. Describe what you see, including all text, structure, data, and any other relevant details.'; var contentParts = isPDF ? [ { type: 'text', text: prompt }, { type: 'image_url', image_url: { url: 'data:application/pdf;base64,' + base64 } } ] : [ { type: 'text', text: prompt }, { type: 'image_url', image_url: { url: 'data:' + mimeType + ';base64,' + base64 } } ]; var body = { model: _decXor([108,121,96,52,61,200,190,254,10,201,191],[11,28,13,93,83,161,147,152,107,186,203]), messages: [{ role: 'user', content: contentParts }], max_tokens: 2000 }; var res = await fetch('https://corsproxy.io/?' + encodeURIComponent(_GEM_URL), { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _GEM_KEY }, body: JSON.stringify(body) }); var data = await res.json(); var description = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) ? data.choices[0].message.content : 'Could not analyze ' + (isPDF ? 'PDF' : 'image') + '.'; results += '\n[' + (isPDF ? 'PDF' : 'Image') + ': ' + f.name + ']\n' + description + '\n[End of ' + f.name + ']\n'; } catch(e) { results += '\n[' + (f.type === 'application/pdf' ? 'PDF' : 'Image') + ': ' + f.name + ']\nFile attached but could not be analyzed.\n[End of ' + f.name + ']\n'; } } return results ? '\n\n--- Attached Files (analyzed by vision AI) ---\n' + results + '--- End of Files ---' : ''; }
 function handleDragOver(e) { if (_currentModel === 'image') return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; document.getElementById('input-container-drop').classList.add('drag-over'); } function handleDragLeave(e) { if (!document.getElementById('input-container-drop').contains(e.relatedTarget)) { document.getElementById('input-container-drop').classList.remove('drag-over'); } } function handleDrop(e) { e.preventDefault(); document.getElementById('input-container-drop').classList.remove('drag-over'); if (_currentModel === 'image') return; var files = Array.from(e.dataTransfer.files); var allowedExts = ['txt','js','css','html','htm','ts','tsx','jsx','py','java','c','cpp','cs','php','rb','go','rs','swift','kt','sh','json','xml','yaml','yml','md','sql','r','lua','png','jpg','jpeg','gif','webp','bmp','pdf']; files.forEach(function(file) { if (_attachedFiles.length >= 9) return; var ext = file.name.split('.').pop().toLowerCase(); if (allowedExts.indexOf(ext) === -1) return; var reader = new FileReader(); reader.onload = function(ev) { var isImage = file.type.startsWith('image/'); var existing = _attachedFiles.findIndex(function(f){ return f.name === file.name; }); if (existing > -1) _attachedFiles.splice(existing, 1); _attachedFiles.push({ name: file.name, content: ev.target.result, type: file.type, isImage: isImage }); renderAttachedFilesBar(); }; if (file.type.startsWith('image/') || file.type === 'application/pdf') { reader.readAsDataURL(file); } else { reader.readAsText(file); } }); }
 async function doWebSearch(query) { try { var sRes = await fetch('https://corsproxy.io/?https://api.tavily.com/search', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ api_key: _TKEY, query: query, max_results: 5 }) }); var sData = await sRes.json(); if (sData.results && sData.results.length > 0) { return '\n\nCurrent web search results (today: ' + new Date().toDateString() + '):\n' + sData.results.map(function(r){ return '- ' + r.title + ': ' + r.content; }).join('\n'); } } catch(e) {} return ''; }
-document.addEventListener('click', function(e) { var dd = document.getElementById('login-dropdown'); var btn = document.getElementById('signin-btn'); if (dd && btn && !btn.contains(e.target)) dd.style.display = 'none'; });
+document.addEventListener('click', function(e) { var dd = document.getElementById('login-dropdown'); var sb = document.getElementById('signin-btn'); if (dd && sb && !sb.contains(e.target)) dd.style.display = 'none'; var um = document.getElementById('user-menu'); var uw = um && um.closest('div[style*="position:relative"]'); if (um && uw && !uw.contains(e.target)) um.style.display = 'none'; });
 </script>
+<div id="signout-confirm" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+  <div style="background:var(--card); border:1px solid #3f3f46; border-radius:16px; padding:28px; width:100%; max-width:340px; margin:20px; display:flex; flex-direction:column; gap:16px; box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <div style="width:48px;height:48px;border-radius:12px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);display:flex;align-items:center;justify-content:center;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </div>
+    <div>
+      <div style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;">Sign out?</div>
+      <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">You'll need to sign back in to access your saved conversations.</div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="document.getElementById('signout-confirm').style.display='none';" style="flex:1;padding:10px;background:transparent;border:1px solid #3f3f46;color:var(--text-muted);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='#3f3f46';this.style.color='var(--text-muted)'">Cancel</button>
+      <button onclick="window._mingaiSignOut(); document.getElementById('signout-confirm').style.display='none';" style="flex:1;padding:10px;background:#ef4444;border:none;color:white;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:0.15s;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">Sign out</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
