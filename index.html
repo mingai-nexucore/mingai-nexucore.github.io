@@ -17,7 +17,7 @@
     <meta name="twitter:description" content="Chat, code, and create with MingAI by NexuCore.">
     <meta name="twitter:image" content="https://mingai-nexucore.github.io/assets/thumb.png">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script type="module"> import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"; import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"; import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"; const firebaseConfig = { apiKey: "AIzaSyAFqNEfpC-1xuTFiD5nP1gRvH00hvaPhnQ", authDomain: "mingai-nexucore.firebaseapp.com", projectId: "mingai-nexucore", storageBucket: "mingai-nexucore.firebasestorage.app", messagingSenderId: "231430535977", appId: "1:231430535977:web:cf6fa31f692c1af081d538" }; const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app); window._mingaiDB = db; window._firestoreOps = { doc, setDoc, getDoc, deleteDoc, collection, getDocs }; window._mingaiSignIn = async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { alert("Sign-in failed: " + e.message); } }; window._mingaiSignOut = async () => { await signOut(auth); }; window._banUser = async (email, reason, duration) => { const banData = { email, reason, bannedAt: Date.now(), bannedBy: auth.currentUser?.email || 'admin', isPermanent: duration === 'permanent', expiresAt: duration === 'permanent' ? null : Date.now() + (parseInt(duration) * 24 * 60 * 60 * 1000) }; await setDoc(doc(db, 'bans', email.replace(/\./g, '_')), banData); }; window._unbanUser = async (email) => { await deleteDoc(doc(db, 'bans', email.replace(/\./g, '_'))); }; window._getAllBans = async () => { const snap = await getDocs(collection(db, 'bans')); return snap.docs.map(d => d.data()); }; window._checkBan = async (email) => { const snap = await getDoc(doc(db, 'bans', email.replace(/\./g, '_'))); if (!snap.exists()) return null; const ban = snap.data(); if (!ban.isPermanent && ban.expiresAt && Date.now() > ban.expiresAt) { await deleteDoc(doc(db, 'bans', email.replace(/\./g, '_'))); return null; } return ban; }; onAuthStateChanged(auth, (user) => { window._mingaiCurrentUser = user || null; const userAvatar = document.getElementById('user-avatar'); const userName = document.getElementById('user-name'); const signInBtn = document.getElementById('signin-btn'); const userMenuWrapper = document.getElementById('user-menu-wrapper'); const stBtn = document.getElementById('sidebar-toggle-btn'); if (user) { if (userMenuWrapper) userMenuWrapper.style.display = 'block'; if (userAvatar) { userAvatar.src = user.photoURL || ''; userAvatar.style.display = user.photoURL ? 'block' : 'none'; } if (userName) { userName.textContent = user.displayName || user.email; const _existingBadge = document.getElementById('admin-badge'); if (_existingBadge) _existingBadge.remove(); if (_ADMIN_EMAILS.indexOf(user.email) > -1) { const _badge = document.createElement('span'); _badge.id = 'admin-badge'; _badge.title = 'Admin'; _badge.style.cssText = 'display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#6366f1,#818cf8);color:white;font-size:10px;font-weight:700;padding:2px 6px 2px 4px;border-radius:20px;letter-spacing:0.3px;vertical-align:middle;margin-left:4px;'; _badge.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>Admin'; userName.parentNode.insertBefore(_badge, userName.nextSibling); } } const avatarMenu = document.getElementById('user-avatar-menu'); if (avatarMenu) { avatarMenu.src = user.photoURL || ''; avatarMenu.style.display = user.photoURL ? 'block' : 'none'; } const nameMenu = document.getElementById('user-name-menu'); if (nameMenu) nameMenu.textContent = user.displayName || ''; const emailMenu = document.getElementById('user-email-menu'); if (emailMenu) emailMenu.textContent = user.email || ''; if (signInBtn) signInBtn.style.display = 'none'; if (stBtn) stBtn.style.display = 'flex'; const adminBtn = document.getElementById('admin-panel-btn'); if (adminBtn) adminBtn.style.display = (_ADMIN_EMAILS.indexOf(user.email) > -1) ? 'flex' : 'none'; if (typeof window._01Oll11I === 'function') window._01Oll11I(); window._checkBan && window._checkBan(user.email).then(ban => { if (ban) { const expStr = ban.isPermanent ? 'permanently' : 'temporarily'; const untilStr = ban.isPermanent ? '' : `\nUntil: ${new Date(ban.expiresAt).toLocaleDateString()}`; alert(`🚫 Your account has been ${expStr} banned from MingAI.\n\nReason: ${ban.reason}${untilStr}\n\nIf you believe this is a mistake, contact support.`); window._mingaiSignOut(); } }); } else { if (userMenuWrapper) userMenuWrapper.style.display = 'none'; const userMenu = document.getElementById('user-menu'); if (userMenu) userMenu.style.display = 'none'; if (userAvatar) userAvatar.style.display = 'none'; if (userName) userName.textContent = ''; if (signInBtn) signInBtn.style.display = 'flex'; if (stBtn) stBtn.style.display = 'none'; const adminBtnOut = document.getElementById('admin-panel-btn'); if (adminBtnOut) adminBtnOut.style.display = 'none'; const sidebar = document.getElementById('sidebar'); const overlay = document.getElementById('sidebar-overlay'); if (sidebar) { sidebar.classList.add('hidden'); sidebar.classList.remove('open'); } if (overlay) overlay.classList.remove('visible'); if (typeof window.startNewChat === 'function') window.startNewChat(); if (typeof window._01Oll11I === 'function') window._01Oll11I(); } }); </script>
+    <script type="module"> import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"; import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"; import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"; const firebaseConfig = { apiKey: "AIzaSyAFqNEfpC-1xuTFiD5nP1gRvH00hvaPhnQ", authDomain: "mingai-nexucore.firebaseapp.com", projectId: "mingai-nexucore", storageBucket: "mingai-nexucore.firebasestorage.app", messagingSenderId: "231430535977", appId: "1:231430535977:web:cf6fa31f692c1af081d538" }; const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app); window._mingaiDB = db; window._firestoreOps = { doc, setDoc, getDoc, deleteDoc, collection, getDocs }; window._mingaiSignIn = async () => { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { alert("Sign-in failed: " + e.message); } }; window._mingaiSignOut = async () => { await signOut(auth); }; window._banUser = async (email, reason, duration) => { const banData = { email, reason, bannedAt: Date.now(), bannedBy: auth.currentUser?.email || 'admin', isPermanent: duration === 'permanent', expiresAt: duration === 'permanent' ? null : Date.now() + (parseInt(duration) * 24 * 60 * 60 * 1000) }; await setDoc(doc(db, 'bans', email.replace(/\./g, '_')), banData); }; window._unbanUser = async (email) => { await deleteDoc(doc(db, 'bans', email.replace(/\./g, '_'))); }; window._getAllBans = async () => { const snap = await getDocs(collection(db, 'bans')); return snap.docs.map(d => d.data()); }; window._checkBan = async (email) => { const snap = await getDoc(doc(db, 'bans', email.replace(/\./g, '_'))); if (!snap.exists()) return null; const ban = snap.data(); if (!ban.isPermanent && ban.expiresAt && Date.now() > ban.expiresAt) { await deleteDoc(doc(db, 'bans', email.replace(/\./g, '_'))); return null; } return ban; }; onAuthStateChanged(auth, (user) => { window._mingaiCurrentUser = user || null; const userAvatar = document.getElementById('user-avatar'); const userName = document.getElementById('user-name'); const signInBtn = document.getElementById('signin-btn'); const userMenuWrapper = document.getElementById('user-menu-wrapper'); const stBtn = document.getElementById('sidebar-toggle-btn'); if (user) { if (userMenuWrapper) userMenuWrapper.style.display = 'block'; if (userAvatar) { userAvatar.src = user.photoURL || ''; userAvatar.style.display = user.photoURL ? 'block' : 'none'; } if (userName) { userName.textContent = user.displayName || user.email; const _existingBadge = document.getElementById('admin-badge'); if (_existingBadge) _existingBadge.remove(); if (_ADMIN_EMAILS.indexOf(user.email) > -1) { const _badge = document.createElement('span'); _badge.id = 'admin-badge'; _badge.title = 'Admin'; _badge.style.cssText = 'display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#6366f1,#818cf8);color:white;font-size:10px;font-weight:700;padding:2px 6px 2px 4px;border-radius:20px;letter-spacing:0.3px;vertical-align:middle;margin-left:4px;'; _badge.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>Admin'; userName.parentNode.insertBefore(_badge, userName.nextSibling); } } const avatarMenu = document.getElementById('user-avatar-menu'); if (avatarMenu) { avatarMenu.src = user.photoURL || ''; avatarMenu.style.display = user.photoURL ? 'block' : 'none'; } const nameMenu = document.getElementById('user-name-menu'); if (nameMenu) nameMenu.textContent = user.displayName || ''; const emailMenu = document.getElementById('user-email-menu'); if (emailMenu) emailMenu.textContent = user.email || ''; if (signInBtn) signInBtn.style.display = 'none'; if (stBtn) stBtn.style.display = 'flex'; const adminBtn = document.getElementById('admin-panel-btn'); if (adminBtn) adminBtn.style.display = (_ADMIN_EMAILS.indexOf(user.email) > -1) ? 'flex' : 'none'; if (typeof window._01Oll11I === 'function') window._01Oll11I(); window._checkBan && window._checkBan(user.email).then(ban => { if (ban) { const expStr = ban.isPermanent ? 'permanently' : 'temporarily'; const untilStr = ban.isPermanent ? '' : `Until: ${new Date(ban.expiresAt).toLocaleDateString()}`; showBanScreen(expStr, ban.reason, untilStr); } }); } else { if (userMenuWrapper) userMenuWrapper.style.display = 'none'; const userMenu = document.getElementById('user-menu'); if (userMenu) userMenu.style.display = 'none'; if (userAvatar) userAvatar.style.display = 'none'; if (userName) userName.textContent = ''; if (signInBtn) signInBtn.style.display = 'flex'; if (stBtn) stBtn.style.display = 'none'; const adminBtnOut = document.getElementById('admin-panel-btn'); if (adminBtnOut) adminBtnOut.style.display = 'none'; const sidebar = document.getElementById('sidebar'); const overlay = document.getElementById('sidebar-overlay'); if (sidebar) { sidebar.classList.add('hidden'); sidebar.classList.remove('open'); } if (overlay) overlay.classList.remove('visible'); if (typeof window.startNewChat === 'function') window.startNewChat(); if (typeof window._01Oll11I === 'function') window._01Oll11I(); } }); </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
@@ -203,6 +203,13 @@ body.light-theme .attached-file-chip { background:rgba(99,102,241,0.1); border-c
         input:checked + .theme-slider { background: var(--accent); }
         input:checked + .theme-slider:before { transform: translateX(22px); }
         .input-container.drag-over { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(129,140,248,0.2); }
+#admin-panel { scrollbar-width: thin; scrollbar-color: var(--accent) var(--card); }
+#admin-panel::-webkit-scrollbar { width: 6px; }
+#admin-panel::-webkit-scrollbar-track { background: var(--card); }
+#admin-panel::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+#admin-panel::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+#ban-screen { position: fixed; inset: 0; z-index: 999999; background: #0d0d0e; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
+@keyframes ban-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.85; } }
     </style>
 </head>
 <body>
@@ -523,6 +530,60 @@ function handleDragOver(e) { if (_currentModel === 'image') return; e.preventDef
 async function doWebSearch(query) { try { var sRes = await fetch('https://corsproxy.io/?https://api.tavily.com/search', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ api_key: _TKEY, query: query, max_results: 5 }) }); var sData = await sRes.json(); if (sData.results && sData.results.length > 0) { return '\n\nCurrent web search results (today: ' + new Date().toDateString() + '):\n' + sData.results.map(function(r){ return '- ' + r.title + ': ' + r.content; }).join('\n'); } } catch(e) {} return ''; }
 document.addEventListener('click', function(e) { var dd = document.getElementById('login-dropdown'); var sb = document.getElementById('signin-btn'); if (dd && sb && !sb.contains(e.target)) dd.style.display = 'none'; var um = document.getElementById('user-menu'); var uw = um && um.closest('div[style*="position:relative"]'); if (um && uw && !uw.contains(e.target)) um.style.display = 'none'; });
 </script>
+<div id="toast-container" style="position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none;"></div>
+
+<script>
+function showToast(message, type = 'success', duration = 3500) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    const colors = {
+        success: { bg: 'rgba(52,211,153,0.12)', border: 'rgba(52,211,153,0.35)', icon: '#34d399', symbol: '✓' },
+        error:   { bg: 'rgba(248,113,113,0.12)', border: 'rgba(248,113,113,0.35)', icon: '#f87171', symbol: '✕' },
+        info:    { bg: 'rgba(129,140,248,0.12)', border: 'rgba(129,140,248,0.35)', icon: '#818cf8', symbol: 'ℹ' },
+        warn:    { bg: 'rgba(251,191,36,0.12)',  border: 'rgba(251,191,36,0.35)',  icon: '#fbbf24', symbol: '⚠' },
+    };
+    const c = colors[type] || colors.info;
+    toast.style.cssText = `pointer-events:all;display:flex;align-items:center;gap:12px;background:${c.bg};border:1px solid ${c.border};border-radius:12px;padding:14px 18px;min-width:280px;max-width:380px;box-shadow:0 8px 32px rgba(0,0,0,0.4);backdrop-filter:blur(12px);transform:translateX(120%);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);`;
+    toast.innerHTML = `<span style="width:22px;height:22px;border-radius:50%;background:${c.icon};color:#000;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${c.symbol}</span><span style="font-size:13px;font-weight:600;color:#e4e4e7;line-height:1.4;flex:1;">${message}</span><button onclick="this.parentElement.remove()" style="background:none;border:none;color:#52525b;cursor:pointer;font-size:16px;padding:0;line-height:1;flex-shrink:0;" onmouseover="this.style.color='#a1a1aa'" onmouseout="this.style.color='#52525b'">✕</button>`;
+    container.appendChild(toast);
+    requestAnimationFrame(() => { requestAnimationFrame(() => { toast.style.transform = 'translateX(0)'; }); });
+    setTimeout(() => { toast.style.transform = 'translateX(120%)'; setTimeout(() => toast.remove(), 300); }, duration);
+    return toast;
+}
+</script>
+<script>
+function showBanScreen(expStr, reason, untilStr) {
+    const existing = document.getElementById('ban-screen');
+    if (existing) existing.remove();
+    const screen = document.createElement('div');
+    screen.id = 'ban-screen';
+    screen.innerHTML = `
+        <div style="max-width:480px;width:100%;display:flex;flex-direction:column;align-items:center;gap:24px;">
+            <div style="width:80px;height:80px;border-radius:20px;background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.25);display:flex;align-items:center;justify-content:center;animation:ban-pulse 2.5s ease-in-out infinite;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            </div>
+            <div>
+                <div style="font-size:1.6rem;font-weight:800;color:#fff;margin-bottom:8px;">You've been banned</div>
+                <div style="font-size:14px;color:#71717a;line-height:1.7;">Your account has been <span style="color:#f87171;font-weight:700;">${expStr} banned</span> from MingAI.</div>
+            </div>
+            <div style="background:#111113;border:1px solid #27272a;border-radius:14px;padding:20px;width:100%;display:flex;flex-direction:column;gap:12px;text-align:left;">
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                    <span style="font-size:10px;font-weight:700;color:#52525b;text-transform:uppercase;letter-spacing:0.6px;">Reason</span>
+                    <span style="font-size:14px;color:#d4d4d8;">${reason || 'No reason provided.'}</span>
+                </div>
+                ${untilStr ? `<div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:10px;font-weight:700;color:#52525b;text-transform:uppercase;letter-spacing:0.6px;">Duration</span><span style="font-size:14px;color:#fbbf24;">${untilStr}</span></div>` : ''}
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                    <span style="font-size:10px;font-weight:700;color:#52525b;text-transform:uppercase;letter-spacing:0.6px;">Support</span>
+                    <span style="font-size:13px;color:#71717a;">If you believe this is a mistake, contact NexuCore support.</span>
+                </div>
+            </div>
+            <div style="font-size:11px;color:#3f3f46;margin-top:8px;">MingAI — Powered by NexuCore</div>
+        </div>`;
+    document.body.appendChild(screen);
+    document.body.style.overflow = 'hidden';
+}
+</script>
+
 <div id="signout-confirm" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
   <div style="background:var(--card); border:1px solid #3f3f46; border-radius:16px; padding:28px; width:100%; max-width:340px; margin:20px; display:flex; flex-direction:column; gap:16px; box-shadow:0 20px 60px rgba(0,0,0,0.5);">
     <div style="width:48px;height:48px;border-radius:12px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);display:flex;align-items:center;justify-content:center;">
@@ -538,11 +599,8 @@ document.addEventListener('click', function(e) { var dd = document.getElementByI
     </div>
   </div>
 </div>
-<!-- ADMIN PANEL -->
 <div id="admin-panel" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; backdrop-filter:blur(6px); align-items:flex-start; justify-content:center; overflow-y:auto; padding:20px;">
   <div style="background:#0d0d0e; border:1px solid #3f3f46; border-radius:20px; width:100%; max-width:860px; margin:0 auto; padding:32px; display:flex; flex-direction:column; gap:24px;">
-    
-    <!-- Header -->
     <div style="display:flex; align-items:center; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:12px;">
         <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#6366f1,#818cf8);display:flex;align-items:center;justify-content:center;">
@@ -555,8 +613,6 @@ document.addEventListener('click', function(e) { var dd = document.getElementByI
       </div>
       <button onclick="document.getElementById('admin-panel').style.display='none'" style="background:#1a1a1c;border:1px solid #3f3f46;color:#a1a1aa;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;font-weight:600;">✕ Close</button>
     </div>
-
-    <!-- Stats Row -->
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;" id="admin-stats">
       <div style="background:#1a1a1c;border:1px solid #27272a;border-radius:12px;padding:16px;">
         <div style="font-size:11px;color:#52525b;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Total Bans</div>
@@ -571,8 +627,6 @@ document.addEventListener('click', function(e) { var dd = document.getElementByI
         <div id="stat-temp-bans" style="font-size:1.8rem;font-weight:800;color:#34d399;">—</div>
       </div>
     </div>
-
-    <!-- Ban Form -->
     <div style="background:#111113;border:1px solid #27272a;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px;">
       <div style="font-size:0.95rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
@@ -603,8 +657,6 @@ document.addEventListener('click', function(e) { var dd = document.getElementByI
         🚫 Issue Ban
       </button>
     </div>
-
-    <!-- Check Ban Form -->
     <div style="background:#111113;border:1px solid #27272a;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px;">
       <div style="font-size:0.95rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -619,8 +671,6 @@ document.addEventListener('click', function(e) { var dd = document.getElementByI
       </div>
       <div id="lookup-result" style="display:none;background:#0d0d0e;border:1px solid #27272a;border-radius:8px;padding:14px;font-size:13px;color:#a1a1aa;"></div>
     </div>
-
-    <!-- Bans Table -->
     <div style="background:#111113;border:1px solid #27272a;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px;">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div style="font-size:0.95rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;">
@@ -640,7 +690,7 @@ document.addEventListener('click', function(e) { var dd = document.getElementByI
 <script>
 async function openAdminPanel() {
     if (!window._mingaiCurrentUser || ['ming.nexucore@gmail.com','nexucorecompany@gmail.com'].indexOf(window._mingaiCurrentUser.email) === -1) {
-        alert('Access denied.'); return;
+        showToast('Access denied.', 'error'); return;
     }
     document.getElementById('admin-panel').style.display = 'flex';
     await loadAdminBans();
@@ -654,48 +704,42 @@ async function loadAdminBans() {
         const statTotal = document.getElementById('stat-total-bans');
         const statPerm = document.getElementById('stat-perm-bans');
         const statTemp = document.getElementById('stat-temp-bans');
-        
         const now = Date.now();
         const activeBans = bans.filter(b => b.isPermanent || !b.expiresAt || b.expiresAt > now);
         const permBans = activeBans.filter(b => b.isPermanent);
         const tempBans = activeBans.filter(b => !b.isPermanent);
-        
         if (statTotal) statTotal.textContent = activeBans.length;
         if (statPerm) statPerm.textContent = permBans.length;
         if (statTemp) statTemp.textContent = tempBans.length;
-        
         if (activeBans.length === 0) {
             container.innerHTML = '<div style="color:#52525b;font-size:13px;text-align:center;padding:20px;">No active bans.</div>';
             return;
         }
-        
         let html = '<table style="width:100%;border-collapse:collapse;font-size:12px;">';
         html += '<thead><tr style="border-bottom:1px solid #27272a;">';
         ['Email','Reason','Type','Expires','Banned By','Action'].forEach(h => {
             html += `<th style="padding:8px 10px;text-align:left;color:#52525b;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;">${h}</th>`;
         });
         html += '</tr></thead><tbody>';
-        
         activeBans.forEach(ban => {
-            const typeColor = ban.isPermanent ? '#f87171' : '#34d399';
+            const typeColor = ban.isPermanent ? '#f87171' : '#fbbf24';
             const typeLabel = ban.isPermanent ? '🔴 Permanent' : '🟡 Temporary';
             const expiresStr = ban.isPermanent ? '—' : new Date(ban.expiresAt).toLocaleDateString();
-            html += `<tr style="border-bottom:1px solid #1a1a1c;" onmouseover="this.style.background='#1a1a1c'" onmouseout="this.style.background='transparent'">
+            html += `<tr style="border-bottom:1px solid #1a1a1c;transition:background 0.15s;" onmouseover="this.style.background='#1a1a1c'" onmouseout="this.style.background='transparent'">
                 <td style="padding:10px;color:#d4d4d8;font-family:monospace;">${ban.email}</td>
                 <td style="padding:10px;color:#a1a1aa;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${ban.reason}">${ban.reason || '—'}</td>
                 <td style="padding:10px;color:${typeColor};font-weight:700;">${typeLabel}</td>
                 <td style="padding:10px;color:#71717a;">${expiresStr}</td>
                 <td style="padding:10px;color:#52525b;">${ban.bannedBy || '—'}</td>
                 <td style="padding:10px;">
-                    <button onclick="adminUnbanUser('${ban.email}')" style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3);color:#34d399;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:11px;font-weight:700;" onmouseover="this.style.background='rgba(52,211,153,0.2)'" onmouseout="this.style.background='rgba(52,211,153,0.1)'">Unban</button>
+                    <button onclick="adminUnbanUser('${ban.email}')" style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3);color:#34d399;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:11px;font-weight:700;transition:background 0.15s;" onmouseover="this.style.background='rgba(52,211,153,0.2)'" onmouseout="this.style.background='rgba(52,211,153,0.1)'">Unban</button>
                 </td>
             </tr>`;
         });
-        
         html += '</tbody></table>';
         container.innerHTML = html;
     } catch(e) {
-        document.getElementById('bans-table-container').innerHTML = '<div style="color:#f87171;font-size:13px;padding:20px;">Error loading bans: ' + e.message + '</div>';
+        document.getElementById('bans-table-container').innerHTML = `<div style="color:#f87171;font-size:13px;padding:20px;">Error loading bans: ${e.message}</div>`;
     }
 }
 
@@ -703,48 +747,70 @@ async function adminBanUser() {
     const email = document.getElementById('ban-email-input').value.trim();
     const duration = document.getElementById('ban-duration-select').value;
     const reason = document.getElementById('ban-reason-input').value.trim();
-    if (!email) { alert('Please enter an email address.'); return; }
-    if (!reason) { alert('Please enter a reason for the ban.'); return; }
-    if (!window._banUser) { alert('Ban system not ready. Try again in a moment.'); return; }
+    if (!email) { showToast('Please enter an email address.', 'warn'); return; }
+    if (!reason) { showToast('Please enter a reason for the ban.', 'warn'); return; }
+    if (!window._banUser) { showToast('Ban system not ready. Try again in a moment.', 'error'); return; }
     try {
         await window._banUser(email, reason, duration);
-        alert(`✅ ${email} has been ${duration === 'permanent' ? 'permanently' : 'temporarily'} banned.`);
+        showToast(`${email} has been ${duration === 'permanent' ? 'permanently' : 'temporarily'} banned.`, 'success');
         document.getElementById('ban-email-input').value = '';
         document.getElementById('ban-reason-input').value = '';
         await loadAdminBans();
     } catch(e) {
-        alert('Error: ' + e.message);
+        showToast('Error: ' + e.message, 'error');
     }
 }
 
 async function adminUnbanUser(email) {
-    if (!confirm(`Remove ban for ${email}?`)) return;
-    try {
-        await window._unbanUser(email);
-        alert(`✅ ${email} has been unbanned.`);
-        await loadAdminBans();
-    } catch(e) {
-        alert('Error: ' + e.message);
-    }
+    showConfirmModal(`Remove ban for <b>${email}</b>?`, async () => {
+        try {
+            await window._unbanUser(email);
+            showToast(`${email} has been unbanned.`, 'success');
+            await loadAdminBans();
+        } catch(e) {
+            showToast('Error: ' + e.message, 'error');
+        }
+    });
 }
 
 async function adminLookupUser() {
     const email = document.getElementById('lookup-email-input').value.trim();
-    if (!email) { alert('Enter an email to look up.'); return; }
+    if (!email) { showToast('Enter an email to look up.', 'warn'); return; }
     const result = document.getElementById('lookup-result');
     result.style.display = 'block';
-    result.innerHTML = 'Looking up...';
+    result.innerHTML = '<span style="color:#52525b;">Looking up...</span>';
     try {
         const ban = await window._checkBan(email);
         if (!ban) {
             result.innerHTML = `<span style="color:#34d399;">✅ <b>${email}</b> is not banned.</span>`;
         } else {
-            const expStr = ban.isPermanent ? '<span style="color:#f87171;">Permanent</span>' : `<span style="color:#fbbf24;">Expires ${new Date(ban.expiresAt).toLocaleDateString()}</span>`;
+            const expStr = ban.isPermanent
+                ? '<span style="color:#f87171;">Permanent</span>'
+                : `<span style="color:#fbbf24;">Expires ${new Date(ban.expiresAt).toLocaleDateString()}</span>`;
             result.innerHTML = `<span style="color:#f87171;">🚫 <b>${email}</b> is banned.</span><br><span style="color:#71717a;">Reason: ${ban.reason}</span><br><span style="color:#71717a;">Duration: ${expStr}</span><br><span style="color:#52525b;">Banned by: ${ban.bannedBy} on ${new Date(ban.bannedAt).toLocaleString()}</span>`;
         }
     } catch(e) {
         result.innerHTML = `<span style="color:#f87171;">Error: ${e.message}</span>`;
     }
+}
+
+function showConfirmModal(message, onConfirm) {
+    const existing = document.getElementById('confirm-modal');
+    if (existing) existing.remove();
+    const modal = document.createElement('div');
+    modal.id = 'confirm-modal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:99998;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+    modal.innerHTML = `
+        <div style="background:#111113;border:1px solid #3f3f46;border-radius:16px;padding:28px;max-width:360px;width:90%;display:flex;flex-direction:column;gap:18px;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+            <div style="font-size:14px;color:#d4d4d8;line-height:1.6;">${message}</div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <button id="confirm-cancel" style="padding:9px 18px;background:transparent;border:1px solid #3f3f46;color:#a1a1aa;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:0.15s;" onmouseover="this.style.borderColor='#818cf8';this.style.color='#fff'" onmouseout="this.style.borderColor='#3f3f46';this.style.color='#a1a1aa'">Cancel</button>
+                <button id="confirm-ok" style="padding:9px 18px;background:#ef4444;border:none;color:white;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Confirm</button>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+    document.getElementById('confirm-cancel').onclick = () => modal.remove();
+    document.getElementById('confirm-ok').onclick = () => { modal.remove(); onConfirm(); };
 }
 </script>
 </body>
